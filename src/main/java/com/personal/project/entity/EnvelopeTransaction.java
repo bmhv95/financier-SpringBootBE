@@ -14,18 +14,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Transaction {
+public class EnvelopeTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "transaction_id")
-    private Long transactionID;
+    @Column(name = "envelope_transaction_id")
+    private Long envelopeTransactionID;
 
-    private LocalDate transactionDate;
+    private LocalDate envelopeTransactionDate;
 
     @ManyToOne
     @JoinColumn(name = "envelope_id")
     private Envelope envelope;
 
-    @OneToMany(mappedBy = "transaction")
-    private List<TransactionDetail> transactionDetails;
+    @OneToMany(mappedBy = "envelopeTransaction")
+    private List<EnvelopeTransactionDetail> envelopeTransactionDetails;
 }

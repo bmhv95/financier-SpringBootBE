@@ -13,18 +13,19 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"transaction_id", "wallet_id"})})
-public class TransactionDetail {
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"goal_transaction_id", "wallet_id"})})
+public class GoalTransactionDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "transaction_detail_id")
-    private Long transactionDetailID;
+    @Column(name = "goal_transaction_detail_id")
+    private Long goalTransactionDetailID;
 
-    private BigDecimal transactionAmount;
+    private BigDecimal goalTransactionAmount;
+    private String goalTransactionDescription;
 
     @ManyToOne
-    @JoinColumn(name = "transaction_id")
-    private Transaction transaction;
+    @JoinColumn(name = "goal_transaction_id")
+    private GoalTransaction goalTransaction;
 
     @ManyToOne
     @JoinColumn(name = "wallet_id")

@@ -6,27 +6,27 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Goals {
+public class GoalTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "goal_id")
-    private Long goalID;
+    @Column(name = "goal_transaction_id")
+    private Long goalTransactionID;
 
-    private String goalName;
-    private BigDecimal goalAmount;
-    private BigDecimal goalCurrentBalance;
-    private LocalDate goalStartDate;
-    private LocalDate goalEndDate;
+    private LocalDate goalTransactionDate;
 
     @ManyToOne
-    @JoinColumn(name = "acc_id")
-    private Account account;
+    @JoinColumn(name = "goal_id")
+    private Goal goal;
+
+    @OneToMany(mappedBy = "goalTransaction")
+    private List<GoalTransactionDetail> goalTransactionDetails;
 }

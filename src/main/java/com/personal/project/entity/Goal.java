@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,18 +14,17 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Envelope {
+public class Goal {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "envelope_id")
-    private Long envelopeID;
+    @Column(name = "goal_id")
+    private Long goalID;
 
-    private String envelopeName;
-    private BigDecimal envelopeBudgetAmount;
-    private BigDecimal envelopeCurrentBalance;
-
-    @CreatedDate
-    private LocalDate envelopeDate;
+    private String goalName;
+    private BigDecimal goalAmount;
+    private BigDecimal goalCurrentBalance;
+    private LocalDate goalStartDate;
+    private LocalDate goalEndDate;
 
     @ManyToOne
     @JoinColumn(name = "acc_id")
