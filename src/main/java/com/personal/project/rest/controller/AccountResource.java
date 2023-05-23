@@ -3,32 +3,18 @@ package com.personal.project.rest.controller;
 import com.personal.project.rest.AccountAPI;
 import com.personal.project.service.AccountService;
 import com.personal.project.service.DTO.AccountDTO;
+import com.personal.project.service.DTO.FullAccountDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 public class AccountResource implements AccountAPI {
     private final AccountService accountService;
-
     @Override
-    public ResponseEntity<AccountDTO> createNewAccount(AccountDTO accountDTO) {
-        AccountDTO newAccount = accountService.createNewAccount(accountDTO);
-        return ResponseEntity.created(URI.create("/api/accounts/" + newAccount.getAccountID())).body(newAccount);
-    }
-
-    @Override
-    public ResponseEntity<AccountDTO> login(AccountDTO accountDTO) {
-        return null;
-    }
-
-    @Override
-    public ResponseEntity<List<AccountDTO>> getAllAccounts() {
-        return ResponseEntity.ok(accountService.getAllAccounts());
+    public ResponseEntity<AccountDTO> getAccount(String token) {
+        return ResponseEntity.ok(accountService.getAccountByEmailFromToken(token));
     }
 
     @Override
@@ -37,13 +23,13 @@ public class AccountResource implements AccountAPI {
     }
 
     @Override
-    public ResponseEntity<AccountDTO> updateAccount(Long id, AccountDTO accountDTO) {
-        return ResponseEntity.ok(accountService.updateAccountByID(id, accountDTO));
+    public ResponseEntity<AccountDTO> updateAccount(String token, FullAccountDTO accountDTO) {
+        return ResponseEntity.ok(accountService.updateAccountByToken(token, accountDTO));
     }
 
     @Override
-    public ResponseEntity<Void> deleteAccount(Long id) {
-        accountService.deleteAccountByID(id);
+    public ResponseEntity<Void> deleteAccount(String token) {
+        accountService.deleteAccountByToken(token);
         return ResponseEntity.noContent().build();
     }
 }

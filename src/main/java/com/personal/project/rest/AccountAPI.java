@@ -1,29 +1,25 @@
 package com.personal.project.rest;
 
-import com.personal.project.entity.Account;
 import com.personal.project.service.DTO.AccountDTO;
+import com.personal.project.service.DTO.FullAccountDTO;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RequestMapping("/api/accounts")
+@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public interface AccountAPI {
-    @PostMapping("/new")
-    ResponseEntity<AccountDTO> createNewAccount(@RequestBody AccountDTO accountDTO);
-
-    @PostMapping("/login")
-    ResponseEntity<AccountDTO> login(@RequestBody AccountDTO accountDTO);
-
     @GetMapping
-    ResponseEntity<List<AccountDTO>> getAllAccounts();
+    ResponseEntity<AccountDTO> getAccount(@RequestHeader("Authorization") String token);
 
     @GetMapping("/{id}")
-    ResponseEntity<AccountDTO> getAccountById(@PathVariable("id") Long id);
+    ResponseEntity<AccountDTO> getAccountById(@PathVariable Long id);
 
-    @PutMapping("/{id}")
-    ResponseEntity<AccountDTO> updateAccount(@PathVariable("id") Long id, @RequestBody AccountDTO accountDTO);
+    @PutMapping
+    ResponseEntity<AccountDTO> updateAccount(@RequestHeader("Authorization") String token, @RequestBody @Valid FullAccountDTO accountDTO);
 
-    @DeleteMapping("/{id}")
-    ResponseEntity<Void> deleteAccount(@PathVariable("id") Long id);
+    @DeleteMapping
+    ResponseEntity<Void> deleteAccount(@RequestHeader("Authorization") String token);
 }

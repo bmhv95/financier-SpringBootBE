@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Data
@@ -19,8 +22,16 @@ public class Account {
     @Column(name = "acc_id")
     private Long accountID;
 
+    private String password;
+
     @NotNull
     private String accountName;
     private String phoneNumber;
+
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    private List<AccountRoleAssignment> roleAssignments = new ArrayList<>();
+
 }

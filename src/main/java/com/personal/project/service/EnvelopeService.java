@@ -6,9 +6,9 @@ import java.util.List;
 
 public interface EnvelopeService {
 
-    EnvelopeDTO createNewEnvelope(EnvelopeDTO envelopeDTO);
+    EnvelopeDTO createNewEnvelope(String token, EnvelopeDTO envelopeDTO);
 
-    List<EnvelopeDTO> getAllEnvelopes();
+    List<EnvelopeDTO> getAllEnvelopesByToken(String token);
 
     EnvelopeDTO getEnvelopeByID(Long envelopeID);
 

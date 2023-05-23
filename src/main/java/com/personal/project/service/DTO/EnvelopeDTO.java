@@ -16,6 +16,4 @@ public class EnvelopeDTO {
     private BigDecimal envelopeCurrentBalance;
 
     private LocalDate envelopeDate;
-
-    private Long accountID;
 }

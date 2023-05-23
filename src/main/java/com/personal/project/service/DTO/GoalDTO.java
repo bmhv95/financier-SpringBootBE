@@ -16,6 +16,4 @@ public class GoalDTO {
     private BigDecimal goalCurrentBalance;
     private LocalDate goalStartDate;
     private LocalDate goalEndDate;
-
-    private Long accountID;
 }

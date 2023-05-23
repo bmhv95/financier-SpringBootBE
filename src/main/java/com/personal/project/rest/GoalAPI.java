@@ -11,9 +11,6 @@ public interface GoalAPI {
     @PostMapping("/new")
     ResponseEntity<GoalDTO> createNewGoal(GoalDTO goalDTO);
 
-    @GetMapping
-    ResponseEntity<List<GoalDTO>> getAllGoals();
-
     @GetMapping("/{id}")
     ResponseEntity<GoalDTO> getGoalById(Long id);
 
