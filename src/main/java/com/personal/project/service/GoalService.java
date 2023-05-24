@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface GoalService {
 
-    GoalDTO createNewGoal(GoalDTO goalDTO);
+    GoalDTO createNewGoal(String token, GoalDTO goalDTO);
 
-    List<GoalDTO> getAllGoals();
+    List<GoalDTO> getAllGoalsByToken(String token);
 
-    GoalDTO getGoalByID(Long goalID);
+    GoalDTO getGoalByID(String token, Long goalID);
 
-    GoalDTO updateGoalByID(Long goalID, GoalDTO goalDTO);
+    GoalDTO updateGoalByID(String token, Long goalID, GoalDTO goalDTO);
 
-    void deleteGoalByID(Long goalID);
+    void deleteGoalByID(String token, Long goalID);
 }

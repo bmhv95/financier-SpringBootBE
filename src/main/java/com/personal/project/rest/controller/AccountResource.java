@@ -18,11 +18,6 @@ public class AccountResource implements AccountAPI {
     }
 
     @Override
-    public ResponseEntity<AccountDTO> getAccountById(Long id) {
-        return ResponseEntity.ok(accountService.getAccountByID(id));
-    }
-
-    @Override
     public ResponseEntity<AccountDTO> updateAccount(String token, FullAccountDTO accountDTO) {
         return ResponseEntity.ok(accountService.updateAccountByToken(token, accountDTO));
     }

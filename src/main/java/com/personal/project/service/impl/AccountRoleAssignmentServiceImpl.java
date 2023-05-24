@@ -8,6 +8,8 @@ import com.personal.project.service.AccountRoleAssignmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AccountRoleAssignmentServiceImpl implements AccountRoleAssignmentService {
@@ -18,5 +20,25 @@ public class AccountRoleAssignmentServiceImpl implements AccountRoleAssignmentSe
                 .account(account)
                 .role(EnumRole.ROLE_USER)
                 .build());
+    }
+
+    @Override
+    public AccountRoleAssignment addAccountRoleAssignment(Account account, EnumRole role) {
+        return null;
+    }
+
+    @Override
+    public AccountRoleAssignment removeAccountRoleAssignment(Account account, EnumRole role) {
+        return null;
+    }
+
+    @Override
+    public List<AccountRoleAssignment> getRolesOfAccount(Account account) {
+        return null;
+    }
+
+    @Override
+    public List<AccountRoleAssignment> getAccountsOfRole(EnumRole role) {
+        return null;
     }
 }

@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 public class AccountDTO {
@@ -18,4 +20,7 @@ public class AccountDTO {
     private String phoneNumber;
     @NotNull
     private String email;
+
+    private LocalDate createDate;
+    private LocalDate updateDate;
 }

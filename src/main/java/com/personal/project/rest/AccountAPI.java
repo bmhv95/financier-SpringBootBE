@@ -14,9 +14,6 @@ public interface AccountAPI {
     @GetMapping
     ResponseEntity<AccountDTO> getAccount(@RequestHeader("Authorization") String token);
 
-    @GetMapping("/{id}")
-    ResponseEntity<AccountDTO> getAccountById(@PathVariable Long id);
-
     @PutMapping
     ResponseEntity<AccountDTO> updateAccount(@RequestHeader("Authorization") String token, @RequestBody @Valid FullAccountDTO accountDTO);
 

@@ -6,7 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +33,11 @@ public class Account {
 
     @Column(unique = true, nullable = false)
     private String email;
+
+    @CreationTimestamp
+    private LocalDate createDate;
+    @UpdateTimestamp
+    private LocalDate updateDate;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private List<AccountRoleAssignment> roleAssignments = new ArrayList<>();

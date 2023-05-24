@@ -11,14 +11,17 @@ import java.util.List;
 @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public interface EnvelopeAPI {
     @PostMapping({"/new"})
-    ResponseEntity<EnvelopeDTO> createNewEnvelope(@RequestBody EnvelopeDTO envelopeDTO);
+    ResponseEntity<EnvelopeDTO> createNewEnvelope(@RequestHeader("Authorization") String token, @RequestBody EnvelopeDTO envelopeDTO);
+
+    @GetMapping
+    ResponseEntity<List<EnvelopeDTO>> getAllEnvelopesByToken(@RequestHeader("Authorization") String token);
 
     @GetMapping("/{id}")
-    ResponseEntity<EnvelopeDTO> getEnvelopeById(@PathVariable Long id);
+    ResponseEntity<EnvelopeDTO> getEnvelopeById(@RequestHeader("Authorization") String token, @PathVariable Long id);
 
     @PutMapping("/{id}")
-    ResponseEntity<EnvelopeDTO> updateEnvelopeById(@PathVariable Long id, @RequestBody EnvelopeDTO envelopeDTO);
+    ResponseEntity<EnvelopeDTO> updateEnvelopeById(@RequestHeader("Authorization") String token, @PathVariable Long id, @RequestBody EnvelopeDTO envelopeDTO);
 
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> deleteEnvelopeById(@PathVariable Long id);
+    ResponseEntity<Void> deleteEnvelopeById(@RequestHeader("Authorization") String token, @PathVariable Long id);
 }

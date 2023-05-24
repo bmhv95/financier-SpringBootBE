@@ -10,9 +10,9 @@ public interface EnvelopeService {
 
     List<EnvelopeDTO> getAllEnvelopesByToken(String token);
 
-    EnvelopeDTO getEnvelopeByID(Long envelopeID);
+    EnvelopeDTO getEnvelopeByID(String token, Long envelopeID);
 
-    EnvelopeDTO updateEnvelopeByID(Long envelopeID, EnvelopeDTO envelopeDTO);
+    EnvelopeDTO updateEnvelopeByID(String token, Long envelopeID, EnvelopeDTO envelopeDTO);
 
-    void deleteEnvelopeByID(Long envelopeID);
+    void deleteEnvelopeByID(String token, Long envelopeID);
 }

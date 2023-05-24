@@ -15,6 +15,7 @@ import com.personal.project.service.mapper.AccountMapper;
 import com.personal.project.util.JwtUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +29,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
@@ -55,6 +57,7 @@ public class AccountServiceImpl implements AccountService {
 
     public AccountDTO createNewAccount(JwtLoginRequest jwtLoginRequest) {
         if (accountRepository.existsByEmail(jwtLoginRequest.getEmail())) {
+            log.error("Email is already registered: " + jwtLoginRequest.getEmail());
             throw new RuntimeException("Email is already registered");
         }
 
@@ -101,14 +104,19 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDTO getAccountByEmailFromToken(String token) {
+        return accountMapper.accountToAccountDTO(getAccountEntityFromToken(token));
+    }
+
+    @Override
+    public Account getAccountEntityFromToken(String token){
         String email = jwtUtils.getEmailFromHeader(token);
-        Account account = accountRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Account not found"));
-        return accountMapper.accountToAccountDTO(account);
+        return accountRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Account not found"));
     }
 
     @Override
     public AccountDTO updateAccountByToken(String token, FullAccountDTO accountDTO) {
         String email = jwtUtils.getEmailFromHeader(token);
+        checkDTO(accountDTO);
 
         return updateAccountByEmail(email, accountDTO);
     }
@@ -116,6 +124,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDTO updateAccountByID(Long id, FullAccountDTO accountDTO) {
+        checkDTO(accountDTO);
         Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account not found"));
         String email = account.getEmail();
         return updateAccountByEmail(email, accountDTO);
@@ -126,9 +135,7 @@ public class AccountServiceImpl implements AccountService {
         checkDTO(accountDTO);
 
         Account account = accountRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Account not found"));
-        account.setAccountName(accountDTO.getAccountName());
-        account.setEmail(accountDTO.getEmail());
-        account.setPhoneNumber(accountDTO.getPhoneNumber());
+        accountMapper.updateAccount(accountDTO, account);
         account.setPassword(passwordEncoder.encode(accountDTO.getPassword()));
         return accountMapper.accountToAccountDTO(accountRepository.save(account));
     }

@@ -1,5 +1,6 @@
 package com.personal.project.service;
 
+import com.personal.project.entity.Account;
 import com.personal.project.service.DTO.AccountDTO;
 import com.personal.project.service.DTO.FullAccountDTO;
 import com.personal.project.service.DTO.JwtLoginRequest;
@@ -20,6 +21,8 @@ public interface AccountService {
     AccountDTO getAccountByID(Long id);
 
     AccountDTO getAccountByEmailFromToken(String token);
+
+    Account getAccountEntityFromToken(String token);
 
     //puts
 

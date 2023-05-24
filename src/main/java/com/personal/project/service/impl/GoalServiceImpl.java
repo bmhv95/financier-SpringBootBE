@@ -1,0 +1,91 @@
+package com.personal.project.service.impl;
+
+import com.personal.project.entity.Account;
+import com.personal.project.entity.Goal;
+import com.personal.project.repository.GoalRepository;
+import com.personal.project.service.AccountService;
+import com.personal.project.service.DTO.GoalDTO;
+import com.personal.project.service.GoalService;
+import com.personal.project.service.mapper.GoalMapper;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+public class GoalServiceImpl implements GoalService{
+    private final GoalRepository goalRepository;
+    private final GoalMapper goalMapper;
+    private final AccountService accountService;
+    @Override
+    public GoalDTO createNewGoal(String token, GoalDTO goalDTO) {
+        checkDTO(goalDTO);
+
+        Account account = accountService.getAccountEntityFromToken(token);
+
+        Goal goal = Goal.builder()
+                .goalName(goalDTO.getGoalName())
+                .goalAmount(goalDTO.getGoalAmount())
+                .goalCurrentBalance(BigDecimal.valueOf(0))
+                .goalEndDate(goalDTO.getGoalEndDate())
+                .account(account)
+                .build();
+
+        if(goalDTO.getGoalStartDate() != null){
+            goal.setGoalStartDate(goalDTO.getGoalStartDate());
+        }
+
+        return goalMapper.goalToGoalDTO(goalRepository.save(goal));
+    }
+
+    @Override
+    public List<GoalDTO> getAllGoalsByToken(String token) {
+        return goalMapper.goalListToGoalDTOList(
+                goalRepository.getGoalsByAccountID(accountService.getAccountEntityFromToken(token).getAccountID())
+        );
+    }
+
+    @Override
+    public GoalDTO getGoalByID(String token, Long goalID) {
+        checkOwnership(token, goalID);
+        return goalMapper.goalToGoalDTO(
+                goalRepository.findById(goalID).get()
+        );
+    }
+
+    @Override
+    public GoalDTO updateGoalByID(String token, Long goalID, GoalDTO goalDTO) {
+        checkOwnership(token, goalID);
+        checkDTO(goalDTO);
+
+        Goal goal = goalRepository.findById(goalID).get();
+        goalMapper.updateGoal(goalDTO, goal);
+
+        return goalMapper.goalToGoalDTO(
+                goalRepository.save(goal)
+        );
+    }
+
+    @Override
+    public void deleteGoalByID(String token, Long goalID) {
+        checkOwnership(token, goalID);
+        goalRepository.deleteById(goalID);
+    }
+    
+    private void checkOwnership(String token, Long goalID) {
+        Account account = accountService.getAccountEntityFromToken(token);
+        List<Goal> goals = goalRepository.getGoalsByAccountID(account.getAccountID());
+        if(goals.stream().noneMatch(e -> e.getGoalID().equals(goalID))){
+            log.warn("Goal not found or not owned by account " + account.getAccountID() + ", goalID: " + goalID);
+            throw new IllegalArgumentException("Goal not found");
+        }
+    }
+
+    private void checkDTO(GoalDTO goalDTO){
+        return;
+    }
+}

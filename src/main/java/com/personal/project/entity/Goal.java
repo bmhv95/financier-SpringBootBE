@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,9 +22,13 @@ public class Goal {
     private Long goalID;
 
     private String goalName;
+
     private BigDecimal goalAmount;
     private BigDecimal goalCurrentBalance;
+
+    @CreationTimestamp
     private LocalDate goalStartDate;
+
     private LocalDate goalEndDate;
 
     @ManyToOne
