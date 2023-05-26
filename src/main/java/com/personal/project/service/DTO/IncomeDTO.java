@@ -6,18 +6,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
-public class EnvelopeDTO {
-    private Long envelopeID;
+public class IncomeDTO {
+    private Long incomeID;
 
-    private String envelopeName;
+    private String incomeName;
     @NotNull
     @Min(value = 0)
-    private BigDecimal envelopeBudgetAmount;
-    private BigDecimal envelopeCurrentBalance;
+    private BigDecimal incomeAmount;
+    private boolean recurring;
 
-    private LocalDate envelopeDate;
+    private Long walletID;
 }

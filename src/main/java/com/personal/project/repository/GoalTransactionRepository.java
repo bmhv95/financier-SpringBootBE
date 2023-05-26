@@ -1,9 +1,8 @@
 package com.personal.project.repository;
 
 import com.personal.project.entity.GoalTransaction;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-@Repository
-public interface GoalTransactionRepository extends JpaRepository<GoalTransaction, Long> {
+@Transactional
+public interface GoalTransactionRepository extends TransactionRepository<GoalTransaction> {
 }

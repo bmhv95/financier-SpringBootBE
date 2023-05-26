@@ -1,31 +1,26 @@
 package com.personal.project.entity;
 
+import com.personal.project.listener.TransactionListener;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
-import java.util.List;
+import lombok.experimental.SuperBuilder;
 
 @Entity
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class EnvelopeTransaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "envelope_transaction_id")
-    private Long envelopeTransactionID;
-
-    private LocalDate envelopeTransactionDate;
-
+@DiscriminatorValue("ENVELOPE")
+@EntityListeners(TransactionListener.class)
+public class EnvelopeTransaction extends Transaction {
     @ManyToOne
     @JoinColumn(name = "envelope_id")
     private Envelope envelope;
 
-    @OneToMany(mappedBy = "envelopeTransaction")
-    private List<EnvelopeTransactionDetail> envelopeTransactionDetails;
+    @PostPersist
+    public void updateEnvelope() {
+        envelope.setEnvelopeCurrentBalance(envelope.getEnvelopeCurrentBalance().add(super.getTransactionAmount()));
+    }
 }

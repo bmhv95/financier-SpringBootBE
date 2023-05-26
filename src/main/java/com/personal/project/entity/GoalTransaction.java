@@ -1,32 +1,28 @@
 package com.personal.project.entity;
 
+import com.personal.project.listener.TransactionListener;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
-import java.util.List;
+import lombok.experimental.SuperBuilder;
 
 
 @Entity
 @Data
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class GoalTransaction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "goal_transaction_id")
-    private Long goalTransactionID;
-
-    private LocalDate goalTransactionDate;
-
+@DiscriminatorValue("GOAL")
+@EntityListeners(TransactionListener.class)
+public class GoalTransaction extends Transaction {
     @ManyToOne
     @JoinColumn(name = "goal_id")
     private Goal goal;
 
-    @OneToMany(mappedBy = "goalTransaction")
-    private List<GoalTransactionDetail> goalTransactionDetails;
+    @PostPersist
+    public void updateGoal() {
+        goal.setGoalCurrentBalance(goal.getGoalCurrentBalance().add(super.getTransactionAmount()));
+    }
 }

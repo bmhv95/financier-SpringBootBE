@@ -30,7 +30,7 @@ public class GoalServiceImpl implements GoalService{
         Goal goal = Goal.builder()
                 .goalName(goalDTO.getGoalName())
                 .goalAmount(goalDTO.getGoalAmount())
-                .goalCurrentBalance(BigDecimal.valueOf(0))
+                .goalCurrentBalance(goalDTO.getGoalCurrentBalance() == null ? BigDecimal.ZERO : goalDTO.getGoalCurrentBalance())
                 .goalEndDate(goalDTO.getGoalEndDate())
                 .account(account)
                 .build();
@@ -63,6 +63,7 @@ public class GoalServiceImpl implements GoalService{
         checkDTO(goalDTO);
 
         Goal goal = goalRepository.findById(goalID).get();
+
         goalMapper.updateGoal(goalDTO, goal);
 
         return goalMapper.goalToGoalDTO(
@@ -78,10 +79,9 @@ public class GoalServiceImpl implements GoalService{
     
     private void checkOwnership(String token, Long goalID) {
         Account account = accountService.getAccountEntityFromToken(token);
-        List<Goal> goals = goalRepository.getGoalsByAccountID(account.getAccountID());
-        if(goals.stream().noneMatch(e -> e.getGoalID().equals(goalID))){
-            log.warn("Goal not found or not owned by account " + account.getAccountID() + ", goalID: " + goalID);
-            throw new IllegalArgumentException("Goal not found");
+        Goal goal = goalRepository.findById(goalID).orElseThrow(() -> new RuntimeException("Goal not found"));
+        if(!goal.getAccount().getAccountID().equals(account.getAccountID())) {
+            throw new RuntimeException("You are not the owner of this goal");
         }
     }
 

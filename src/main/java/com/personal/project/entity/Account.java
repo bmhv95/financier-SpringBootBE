@@ -25,6 +25,7 @@ public class Account {
     @Column(name = "acc_id")
     private Long accountID;
 
+    @NotNull
     private String password;
 
     @NotNull

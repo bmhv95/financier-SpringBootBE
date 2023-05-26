@@ -12,6 +12,7 @@ import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -39,4 +40,7 @@ public class Envelope {
     @ManyToOne
     @JoinColumn(name = "acc_id")
     private Account account;
+
+    @OneToMany(mappedBy = "envelope")
+    private List<EnvelopeTransaction> envelopeTransaction;
 }

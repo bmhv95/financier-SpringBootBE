@@ -72,10 +72,9 @@ public class EnvelopeServiceImpl implements EnvelopeService {
 
     private void checkOwnership(String token, Long envelopeID) {
         Account account = accountService.getAccountEntityFromToken(token);
-        List<Envelope> envelopes = envelopeRepository.getEnvelopesByAccountID(account.getAccountID());
-        if(envelopes.stream().noneMatch(e -> e.getEnvelopeID().equals(envelopeID))){
-            log.warn("Envelope not found or not owned by account " + account.getAccountID() + ", envelopeID: " + envelopeID);
-            throw new IllegalArgumentException("Envelope not found");
+        Envelope envelope = envelopeRepository.findById(envelopeID).orElseThrow(() -> new IllegalArgumentException("Envelope not found"));
+        if(!envelope.getAccount().getAccountID().equals(account.getAccountID())){
+            throw new IllegalArgumentException("You are not the owner of this envelope");
         }
     }
 
