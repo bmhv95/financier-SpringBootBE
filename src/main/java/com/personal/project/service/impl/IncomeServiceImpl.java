@@ -25,7 +25,7 @@ public class IncomeServiceImpl implements IncomeService {
     private final AccountService accountService;
     private final WalletService walletService;
     @Override
-    public IncomeDTO createNewIncome(String token, IncomeDTO incomeDTO) {
+    public IncomeDTO createNewIncome(String token, Long walletID, IncomeDTO incomeDTO) {
         checkDTO(incomeDTO);
 
         Account account = accountService.getAccountEntityFromToken(token);
@@ -33,7 +33,7 @@ public class IncomeServiceImpl implements IncomeService {
         Income income = Income.builder()
                 .incomeName(incomeDTO.getIncomeName())
                 .incomeAmount(incomeDTO.getIncomeAmount())
-                .wallet(walletService.getWalletEntityByID(token, incomeDTO.getWalletID()))
+                .wallet(walletService.getWalletEntityByID(token, walletID))
                 .build();
 
         return incomeMapper.toIncomeDTO(incomeRepository.save(income));

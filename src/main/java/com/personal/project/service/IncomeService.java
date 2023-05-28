@@ -5,7 +5,7 @@ import com.personal.project.service.DTO.IncomeDTO;
 import java.util.List;
 
 public interface IncomeService {
-    IncomeDTO createNewIncome(String token, IncomeDTO incomeDTO);
+    IncomeDTO createNewIncome(String token, Long walletID, IncomeDTO incomeDTO);
 
     List<IncomeDTO> getAllIncomesByToken(String token);
 

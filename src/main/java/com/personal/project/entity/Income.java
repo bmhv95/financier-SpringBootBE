@@ -1,6 +1,8 @@
 package com.personal.project.entity;
 
+import com.personal.project.listener.IncomeListener;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +18,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EntityListeners(IncomeListener.class)
 public class Income {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +26,8 @@ public class Income {
     private Long incomeID;
 
     private String incomeName;
-    @NotNull
+    @Column(nullable = false)
+    @Min(value = 0)
     private BigDecimal incomeAmount;
     @CreationTimestamp
     private LocalDate incomeDate;

@@ -1,5 +1,6 @@
 package com.personal.project.rest;
 
+import com.personal.project.service.DTO.IncomeDTO;
 import com.personal.project.service.DTO.WalletDTO;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -25,4 +26,19 @@ public interface WalletAPI {
 
     @DeleteMapping("/{walletID}")
     ResponseEntity<Void> deleteWalletByID(@RequestHeader("Authorization") String token, @PathVariable Long walletID);
+
+    @GetMapping("/{walletID}/incomes")
+    ResponseEntity<List<IncomeDTO>> getIncomesByWalletID(@RequestHeader("Authorization") String token, @PathVariable Long walletID);
+
+    @GetMapping("/incomes)")
+    ResponseEntity<List<IncomeDTO>> getAllIncomes(@RequestHeader("Authorization") String token);
+
+    @PostMapping("/{walletID}/incomes/new")
+    ResponseEntity<IncomeDTO> createNewIncome(@RequestHeader("Authorization") String token, @PathVariable Long walletID, @Valid @RequestBody IncomeDTO incomeDTO);
+
+    @PutMapping("/incomes/{incomeID}")
+    ResponseEntity<IncomeDTO> updateIncomeByID(@RequestHeader("Authorization") String token, @PathVariable Long incomeID, @Valid @RequestBody IncomeDTO incomeDTO);
+
+    @DeleteMapping("/incomes/{incomeID}")
+    ResponseEntity<Void> deleteIncomeByID(@RequestHeader("Authorization") String token, @PathVariable Long incomeID);
 }

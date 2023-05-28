@@ -1,7 +1,9 @@
 package com.personal.project.rest.controller;
 
 import com.personal.project.rest.WalletAPI;
+import com.personal.project.service.DTO.IncomeDTO;
 import com.personal.project.service.DTO.WalletDTO;
+import com.personal.project.service.IncomeService;
 import com.personal.project.service.WalletService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import java.util.List;
 @Slf4j
 public class WalletResource implements WalletAPI {
     private final WalletService walletService;
+    private final IncomeService incomeService;
     @Override
     public ResponseEntity<WalletDTO> createNewWallet(String token, WalletDTO walletDTO) {
         WalletDTO newWallet = walletService.createNewWallet(token, walletDTO);
@@ -40,6 +43,33 @@ public class WalletResource implements WalletAPI {
     @Override
     public ResponseEntity<Void> deleteWalletByID(String token, Long walletID) {
         walletService.deleteWalletByID(token, walletID);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<List<IncomeDTO>> getIncomesByWalletID(String token, Long walletID) {
+        return ResponseEntity.ok(incomeService.getAllIncomesByWalletID(token, walletID));
+    }
+
+    @Override
+    public ResponseEntity<List<IncomeDTO>> getAllIncomes(String token) {
+        return ResponseEntity.ok(incomeService.getAllIncomesByToken(token));
+    }
+
+    @Override
+    public ResponseEntity<IncomeDTO> createNewIncome(String token, Long walletID, IncomeDTO incomeDTO) {
+        IncomeDTO newIncome = incomeService.createNewIncome(token, walletID, incomeDTO);
+        return ResponseEntity.created(URI.create("/api/wallets/incomes/" + newIncome.getIncomeID())).body(newIncome);
+    }
+
+    @Override
+    public ResponseEntity<IncomeDTO> updateIncomeByID(String token, Long incomeID, IncomeDTO incomeDTO) {
+        return ResponseEntity.ok(incomeService.updateIncomeByID(token, incomeID, incomeDTO));
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteIncomeByID(String token, Long incomeID) {
+        incomeService.deleteIncomeByID(token, incomeID);
         return ResponseEntity.noContent().build();
     }
 }
