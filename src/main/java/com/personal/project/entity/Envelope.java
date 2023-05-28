@@ -1,6 +1,7 @@
 package com.personal.project.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,8 +28,10 @@ public class Envelope {
 
     private String envelopeName;
 
-    @NotNull
+    @Column(nullable = false)
+    @Min(value = 0, message = "Envelope budget must not be negative")
     private BigDecimal envelopeBudgetAmount;
+    @Column(nullable = false)
     private BigDecimal envelopeCurrentBalance;
 
     @CreationTimestamp

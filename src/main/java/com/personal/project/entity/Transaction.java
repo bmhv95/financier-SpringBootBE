@@ -10,7 +10,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
 @Data
 @SuperBuilder
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
