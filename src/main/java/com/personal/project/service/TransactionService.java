@@ -6,12 +6,20 @@ import com.personal.project.service.DTO.TransactionDTO;
 
 import java.util.List;
 
-public interface TransactionService {
-    <T extends TransactionDTO> T createTransaction(String token, T transactionDTO);
+public interface TransactionService<T extends TransactionDTO> {
+    T createTransaction(String token, T transactionDTO);
 
-//    List<TransactionDTO> getAllTransactions(String token);
-//
-//    List<EnvelopeTransactionDTO> getAllEnvelopeTransactions(String token);
-//
-//    List<GoalTransactionDTO> getAllGoalTransactions(String token);
+    List<T> getAllTransactions(String token);
+
+    List<EnvelopeTransactionDTO> getAllEnvelopeTransactions(String token);
+
+    List<GoalTransactionDTO> getAllGoalTransactions(String token);
+
+    List<T> getAllTransactionsByWalletID(String token, Long walletID);
+
+    List<T> getGoalTransactionsByWalletID(String token, Long walletID);
+
+    List<T> getEnvelopeTransactionsByWalletID(String token, Long walletID);
+
+    T updateTransactionByID(String token, Long transactionID, T transactionDTO);
 }

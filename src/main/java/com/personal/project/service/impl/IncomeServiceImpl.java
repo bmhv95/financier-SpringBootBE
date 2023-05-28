@@ -41,27 +41,38 @@ public class IncomeServiceImpl implements IncomeService {
 
     @Override
     public List<IncomeDTO> getAllIncomesByToken(String token) {
-        return null;
+        Long accountID = accountService.getAccountEntityFromToken(token).getAccountID();
+        return incomeMapper.toIncomeDTOs(incomeRepository.getIncomesByAccountID(accountID));
     }
 
     @Override
     public List<IncomeDTO> getAllIncomesByWalletID(String token, Long walletID) {
-        return null;
+        Wallet wallet = walletService.getWalletEntityByID(token, walletID);
+        List<Income> incomes = incomeRepository.findByWallet(wallet);
+        return incomeMapper.toIncomeDTOs(incomes);
     }
 
     @Override
     public IncomeDTO getIncomeByID(String token, Long incomeID) {
-        return null;
+        checkOwnership(token, incomeID);
+        return incomeMapper.toIncomeDTO(incomeRepository.findById(incomeID).get());
     }
 
     @Override
     public IncomeDTO updateIncomeByID(String token, Long incomeID, IncomeDTO incomeDTO) {
-        return null;
+        checkOwnership(token, incomeID);
+        checkDTO(incomeDTO);
+        Income income = incomeRepository.findById(incomeID).get();
+        incomeMapper.updateIncome(incomeDTO, income);
+        Wallet wallet = walletService.getWalletEntityByID(token, incomeDTO.getWalletID());
+        income.setWallet(wallet);
+        return incomeMapper.toIncomeDTO(income);
     }
 
     @Override
     public void deleteIncomeByID(String token, Long incomeID) {
-
+        checkOwnership(token, incomeID);
+        incomeRepository.deleteById(incomeID);
     }
 
     private void checkDTO(IncomeDTO incomeDTO) {
