@@ -4,6 +4,7 @@ import com.personal.project.service.DTO.EnvelopeTransactionDTO;
 import com.personal.project.service.DTO.GoalTransactionDTO;
 import com.personal.project.service.DTO.TransactionDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface TransactionService<T extends TransactionDTO> {
@@ -26,4 +27,10 @@ public interface TransactionService<T extends TransactionDTO> {
     T updateTransactionByID(String token, Long transactionID, T transactionDTO);
 
     void deleteTransactionByID(String token, Long transactionID);
+
+    List<T> getTransactionsBetweenMonths(String token, LocalDate startDate, LocalDate endDate);
+
+    List<T> getEnvelopeTransactionsBetweenMonths(String token, LocalDate startDate, LocalDate endDate);
+
+    List<T> getGoalTransactionsBetweenMonths(String token, LocalDate startDate, LocalDate endDate);
 }

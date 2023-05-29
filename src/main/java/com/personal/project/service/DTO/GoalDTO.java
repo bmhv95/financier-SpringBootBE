@@ -1,6 +1,7 @@
 package com.personal.project.service.DTO;
 
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ public class GoalDTO {
 
     private String goalName;
 
+    @NotNull
     @Min(value = 0)
     private BigDecimal goalAmount;
     private BigDecimal goalCurrentBalance;

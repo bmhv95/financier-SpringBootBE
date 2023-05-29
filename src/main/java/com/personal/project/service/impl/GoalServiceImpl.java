@@ -12,6 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -76,7 +80,26 @@ public class GoalServiceImpl implements GoalService{
         checkOwnership(token, goalID);
         goalRepository.deleteById(goalID);
     }
-    
+
+    @Override
+    public List<GoalDTO> getGoalsUnmet(String token) {
+        return getAllGoalsByToken(token).stream()
+                .filter(goal -> goal.getGoalCurrentBalance().compareTo(goal.getGoalAmount()) < 0)
+                .toList();
+    }
+
+    @Override
+    public List<String> calculateUnmetGoalsAllocations(String token) {
+        List<String> result = new ArrayList<>();
+        List<GoalDTO> unmetGoals = getGoalsUnmet(token);
+        for(GoalDTO goal : unmetGoals){
+            long timeRemaining = LocalDate.now().until(goal.getGoalEndDate(), ChronoUnit.MONTHS);
+            BigDecimal monthlyAllocations = goal.getGoalAmount().subtract(goal.getGoalCurrentBalance()).divide(BigDecimal.valueOf(timeRemaining), RoundingMode.DOWN);
+            result.add("Goal: " + goal.getGoalID() + " - " + goal.getGoalName() + " - Monthly allocations: " + monthlyAllocations);
+        }
+        return result;
+    }
+
     private void checkOwnership(String token, Long goalID) {
         Account account = accountService.getAccountEntityFromToken(token);
         Goal goal = goalRepository.findById(goalID).orElseThrow(() -> new RuntimeException("Goal not found"));

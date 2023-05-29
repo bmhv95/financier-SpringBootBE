@@ -5,6 +5,7 @@ import com.personal.project.rest.TransactionAPI;
 import com.personal.project.service.DTO.EnvelopeTransactionDTO;
 import com.personal.project.service.DTO.GoalTransactionDTO;
 import com.personal.project.service.DTO.TransactionDTO;
+import com.personal.project.service.ReportService;
 import com.personal.project.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 @RestController
@@ -82,5 +85,30 @@ public class TransactionResource implements TransactionAPI{
     public ResponseEntity<Void> deleteTransactionById(String token, Long id) {
         transactionService.deleteTransactionByID(token, id);
         return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<List<TransactionDTO>> getTransactionsBetweenTime(String token, String startMonth, String endMonth) {
+        return ResponseEntity.ok(transactionService.getTransactionsBetweenMonths(token, parseStartMonth(startMonth), parseEndMonth(endMonth)));
+    }
+
+    @Override
+    public ResponseEntity<List<TransactionDTO>> getEnvelopeTransactionsBetweenTime(String token, String startMonth, String endMonth) {
+        return ResponseEntity.ok(transactionService.getEnvelopeTransactionsBetweenMonths(token, parseStartMonth(startMonth), parseEndMonth(endMonth)));
+    }
+
+    @Override
+    public ResponseEntity<List<TransactionDTO>> getGoalTransactionsBetweenTime(String token, String startMonth, String endMonth) {
+        return ResponseEntity.ok(transactionService.getGoalTransactionsBetweenMonths(token, parseStartMonth(startMonth), parseEndMonth(endMonth)));
+    }
+
+    private LocalDate parseStartMonth(String month) {
+        YearMonth parseMonth = YearMonth.parse(month);
+        return parseMonth.atDay(1);
+    }
+
+    private LocalDate parseEndMonth(String month) {
+        YearMonth parseMonth = YearMonth.parse(month);
+        return parseMonth.atEndOfMonth();
     }
 }

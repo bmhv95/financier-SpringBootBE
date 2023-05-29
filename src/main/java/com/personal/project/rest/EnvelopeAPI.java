@@ -1,6 +1,8 @@
 package com.personal.project.rest;
 
 import com.personal.project.service.DTO.EnvelopeDTO;
+import com.personal.project.service.DTO.EnvelopeWithTransactionsDTO;
+import com.personal.project.service.DTO.FullAccountDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -24,4 +26,19 @@ public interface EnvelopeAPI {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteEnvelopeById(@RequestHeader("Authorization") String token, @PathVariable Long id);
+
+    @GetMapping("/percentage")
+    ResponseEntity<List<EnvelopeDTO>> getEnvelopesBelowPercentBalance(@RequestHeader("Authorization") String token, @RequestParam Long percentage);
+
+    @GetMapping("/negative")
+    ResponseEntity<List<EnvelopeDTO>> getEnvelopesWithNegativeBalance(@RequestHeader("Authorization") String token);
+
+    @GetMapping("/{id}/transactions")
+    ResponseEntity<EnvelopeWithTransactionsDTO> getEnvelopeWithTransactions(@RequestHeader("Authorization") String token, @PathVariable Long id);
+
+    @GetMapping("/time")
+    ResponseEntity<List<EnvelopeWithTransactionsDTO>> getEnvelopesWithTransactionsBetweenMonths(@RequestHeader("Authorization") String token, @RequestParam String startMonth, @RequestParam String endMonth);
+
+    @GetMapping("/sort-by-spending")
+    ResponseEntity<List<EnvelopeWithTransactionsDTO>> getTopNEnvelopesBySpending(@RequestHeader("Authorization") String token, @RequestParam int limit, @RequestParam String startMonth, @RequestParam String endMonth);
 }

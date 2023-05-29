@@ -42,4 +42,16 @@ public class GoalResource implements GoalAPI {
         goalService.deleteGoalByID(token, id);
         return ResponseEntity.noContent().build();
     }
+
+    @Override
+    public ResponseEntity<List<GoalDTO>> getGoalsUnmet(String token) {
+        return ResponseEntity.ok(goalService.getGoalsUnmet(token));
+    }
+
+    @Override
+    public ResponseEntity<List<String>> calculateUnmetGoalsAllocations(String token) {
+        return ResponseEntity.ok(goalService.calculateUnmetGoalsAllocations(token));
+    }
+
+
 }

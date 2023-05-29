@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,10 +23,15 @@ public class Wallet {
     private Long walletID;
 
     private String walletName;
+
+    @Column(nullable = false)
     private BigDecimal walletBalance;
 
     @CreationTimestamp
     private LocalDate createdDate;
+
+    @UpdateTimestamp
+    private LocalDate updatedDate;
 
     @ManyToOne
     @JoinColumn(name = "acc_id")

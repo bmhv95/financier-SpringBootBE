@@ -25,10 +25,10 @@ public class Account {
     @Column(name = "acc_id")
     private Long accountID;
 
-    @NotNull
+    @Column(nullable = false)
     private String password;
 
-    @NotNull
+    @Column(nullable = false)
     private String accountName;
     private String phoneNumber;
 

@@ -1,6 +1,5 @@
 package com.personal.project.listener;
 
-import com.personal.project.entity.EnvelopeTransaction;
 import com.personal.project.entity.Transaction;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;

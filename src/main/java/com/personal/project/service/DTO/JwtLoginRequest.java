@@ -1,5 +1,7 @@
 package com.personal.project.service.DTO;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class JwtLoginRequest implements Serializable {
+    @NotBlank
     private String email;
+    @NotBlank
     private String password;
 }

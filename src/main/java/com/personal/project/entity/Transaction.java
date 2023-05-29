@@ -34,13 +34,4 @@ public abstract class Transaction {
     @ManyToOne
     @JoinColumn(name = "wallet_id", nullable = false)
     private Wallet wallet;
-
-//    @PostPersist
-//    public void updateWallet() {
-//        if(wallet != null) {
-//            BigDecimal walletBalance = wallet.getWalletBalance();
-//            BigDecimal newBalance = walletBalance.add(transactionAmount);
-//            wallet.setWalletBalance(newBalance);
-//        }
-//    }
 }

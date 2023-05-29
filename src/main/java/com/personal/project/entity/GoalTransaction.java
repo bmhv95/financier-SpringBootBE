@@ -19,6 +19,6 @@ import lombok.experimental.SuperBuilder;
 @EntityListeners({TransactionListener.class, GoalListener.class})
 public class GoalTransaction extends Transaction {
     @ManyToOne
-    @JoinColumn(name = "goal_id")
+    @JoinColumn(name = "goal_id", nullable = false)
     private Goal goal;
 }

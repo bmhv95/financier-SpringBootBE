@@ -1,6 +1,7 @@
 package com.personal.project.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,8 @@ public class Goal {
 
     private String goalName;
 
+    @Column(nullable = false)
+    @Min(value = 0, message = "Goal budget must not be negative")
     private BigDecimal goalAmount;
     private BigDecimal goalCurrentBalance;
 

@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,11 +33,11 @@ public class TransactionServiceImpl<T extends TransactionDTO> implements Transac
     private final WalletService walletService;
 
     @Override
-    public T createTransaction(String token, TransactionDTO transactionDTO) {
+    public TransactionDTO createTransaction(String token, TransactionDTO transactionDTO) {
         if(transactionDTO instanceof EnvelopeTransactionDTO) {
-            return (T) transactionMapper.toEnvelopeDTO(createEnvelopeTransaction((EnvelopeTransactionDTO) transactionDTO));
+            return transactionMapper.toEnvelopeDTO(createEnvelopeTransaction((EnvelopeTransactionDTO) transactionDTO));
         } else if (transactionDTO instanceof GoalTransactionDTO) {
-            return (T) transactionMapper.toGoalDTO(createGoalTransaction((GoalTransactionDTO) transactionDTO));
+            return transactionMapper.toGoalDTO(createGoalTransaction((GoalTransactionDTO) transactionDTO));
         }
         return null; 
     }
@@ -49,12 +50,12 @@ public class TransactionServiceImpl<T extends TransactionDTO> implements Transac
         return result;
     }
 
-    public T getTransactionByID(String token, Long transactionID) {
+    public TransactionDTO getTransactionByID(String token, Long transactionID) {
         Transaction transaction = transactionRepositoryFacade.getTransactionByID(transactionID);
         if(transaction instanceof EnvelopeTransaction) {
-            return (T) transactionMapper.toEnvelopeDTO((EnvelopeTransaction) transaction);
+            return transactionMapper.toEnvelopeDTO((EnvelopeTransaction) transaction);
         } else if (transaction instanceof GoalTransaction) {
-            return (T) transactionMapper.toGoalDTO((GoalTransaction) transaction);
+            return transactionMapper.toGoalDTO((GoalTransaction) transaction);
         }
         return null;
     }
@@ -126,15 +127,31 @@ public class TransactionServiceImpl<T extends TransactionDTO> implements Transac
         transactionRepositoryFacade.deleteTransactionByID(transactionID);
     }
 
+    @Override
+    public List<TransactionDTO> getTransactionsBetweenMonths(String token, LocalDate startDate, LocalDate endDate) {
+        String email = accountService.getAccountEntityFromToken(token).getEmail();
+        return transactionMapper.toTransactionDTOs(transactionRepositoryFacade.getAllTransactionsBetweenMonths(email, startDate, endDate));
+    }
+
+    @Override
+    public List<EnvelopeTransactionDTO> getEnvelopeTransactionsBetweenMonths(String token, LocalDate startDate, LocalDate endDate) {
+        String email = accountService.getAccountEntityFromToken(token).getEmail();
+        return transactionMapper.toEnvelopeDTOs(envelopeTransactionRepository.findAllBetweenMonths(email, startDate, endDate));
+    }
+
+    @Override
+    public List<GoalTransactionDTO> getGoalTransactionsBetweenMonths(String token, LocalDate startDate, LocalDate endDate) {
+        String email = accountService.getAccountEntityFromToken(token).getEmail();
+        return transactionMapper.toGoalDTOs(goalTransactionRepository.findAllBetweenMonths(email, startDate, endDate));
+    }
+
     private GoalTransaction createGoalTransaction(GoalTransactionDTO goalTransactionDTO) {
         GoalTransaction goalTransaction = GoalTransaction.builder()
                 .transactionAmount(goalTransactionDTO.getTransactionAmount())
                 .transactionName(goalTransactionDTO.getTransactionName())
                 .transactionComment(goalTransactionDTO.getTransactionComment())
-                .goal(goalTransactionDTO.getGoalID() == null ? null
-                        : goalRepository.findById(goalTransactionDTO.getGoalID()).get())
-                .wallet(goalTransactionDTO.getWalletID() == null ? null
-                        : walletRepository.findById(goalTransactionDTO.getWalletID()).get())
+                .goal(goalRepository.findById(goalTransactionDTO.getGoalID()).orElseThrow(() -> new RuntimeException("Goal not found")))
+                .wallet(walletRepository.findById(goalTransactionDTO.getWalletID()).orElseThrow(() -> new RuntimeException("Wallet not found")))
                 .build();
 
         return goalTransactionRepository.save(goalTransaction);
@@ -145,10 +162,8 @@ public class TransactionServiceImpl<T extends TransactionDTO> implements Transac
                 .transactionAmount(envelopeTransactionDTO.getTransactionAmount())
                 .transactionName(envelopeTransactionDTO.getTransactionName())
                 .transactionComment(envelopeTransactionDTO.getTransactionComment())
-                .envelope(envelopeTransactionDTO.getEnvelopeID() == null ? null
-                        : envelopeRepository.findById(envelopeTransactionDTO.getEnvelopeID()).get())
-                .wallet(envelopeTransactionDTO.getWalletID() == null ? null
-                        : walletRepository.findById(envelopeTransactionDTO.getWalletID()).get())
+                .envelope(envelopeRepository.findById(envelopeTransactionDTO.getEnvelopeID()).orElseThrow(() -> new RuntimeException("Envelope not found")))
+                .wallet(walletRepository.findById(envelopeTransactionDTO.getWalletID()).orElseThrow(() -> new RuntimeException("Wallet not found")))
                 .build();
         return envelopeTransactionRepository.save(envelopeTransaction);
     }

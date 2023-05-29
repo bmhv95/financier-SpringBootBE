@@ -7,16 +7,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.NoRepositoryBean;
 
-import java.util.Collection;
+import java.time.LocalDate;
 import java.util.List;
 
 @NoRepositoryBean
 public interface TransactionRepository<T extends Transaction> extends JpaRepository<T, Long> {
 
     @Query("SELECT t FROM Transaction t WHERE t.wallet.account.email = ?1")
-    List<? extends Transaction> findAllByEmail(String email);
+    List<T> findAllByEmail(String email);
 
-    List<? extends Transaction> findAllByAccount(Account account);
+    List<T> findAllByAccount(Account account);
 
-    List<? extends Transaction> findAllByWallet(Wallet wallet);
+    List<T> findAllByWallet(Wallet wallet);
+
+    List<T> findAllBetweenMonths(String email, LocalDate startDate, LocalDate endDate);
 }

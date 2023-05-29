@@ -15,4 +15,8 @@ public interface GoalService {
     GoalDTO updateGoalByID(String token, Long goalID, GoalDTO goalDTO);
 
     void deleteGoalByID(String token, Long goalID);
+
+    List<GoalDTO> getGoalsUnmet(String token);
+
+    List<String> calculateUnmetGoalsAllocations(String token);
 }

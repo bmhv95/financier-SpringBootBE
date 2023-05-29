@@ -26,4 +26,10 @@ public interface GoalAPI {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteGoalById(@RequestHeader("Authorization") String token, @PathVariable Long id);
+
+    @GetMapping("/unmet")
+    ResponseEntity<List<GoalDTO>> getGoalsUnmet(@RequestHeader("Authorization") String token);
+
+    @GetMapping("/unmet/calculate")
+    ResponseEntity<List<String>> calculateUnmetGoalsAllocations(@RequestHeader("Authorization") String token);
 }

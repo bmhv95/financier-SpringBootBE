@@ -48,4 +48,13 @@ public interface TransactionAPI {
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteTransactionById(@RequestHeader("Authorization") String token, @PathVariable Long id);
+
+    @GetMapping("/time")
+    ResponseEntity<List<TransactionDTO>> getTransactionsBetweenTime(@RequestHeader("Authorization") String token, @RequestParam("startMonth") String startMonth, @RequestParam("endMonth") String endMonth);
+
+    @GetMapping("/envelopes/time")
+    ResponseEntity<List<TransactionDTO>> getEnvelopeTransactionsBetweenTime(@RequestHeader("Authorization") String token, @RequestParam("startMonth") String startMonth, @RequestParam("endMonth") String endMonth);
+
+    @GetMapping("/goals/time")
+    ResponseEntity<List<TransactionDTO>> getGoalTransactionsBetweenTime(@RequestHeader("Authorization") String token, @RequestParam("startMonth") String startMonth, @RequestParam("endMonth") String endMonth);
 }

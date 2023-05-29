@@ -42,4 +42,16 @@ public interface TransactionMapper {
         }
         return null;
     }
+
+    List<TransactionDTO> toTransactionDTOs(List<Transaction> transactions);
+
+    default <T extends TransactionDTO> T map(Transaction transaction){
+        if(transaction instanceof GoalTransaction){
+            return (T) toGoalDTO((GoalTransaction) transaction);
+        }
+        if(transaction instanceof EnvelopeTransaction){
+            return (T) toEnvelopeDTO((EnvelopeTransaction) transaction);
+        }
+        return null;
+    }
 }
