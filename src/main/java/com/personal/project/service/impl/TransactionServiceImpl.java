@@ -13,6 +13,7 @@ import com.personal.project.service.mapper.TransactionMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class TransactionServiceImpl<T extends TransactionDTO> implements TransactionService {
+public class TransactionServiceImpl implements TransactionService {
     private final EnvelopeTransactionRepository envelopeTransactionRepository;
     private final GoalTransactionRepository goalTransactionRepository;
     private final EnvelopeRepository envelopeRepository;
@@ -33,6 +34,7 @@ public class TransactionServiceImpl<T extends TransactionDTO> implements Transac
     private final WalletService walletService;
 
     @Override
+    @Transactional
     public TransactionDTO createTransaction(String token, TransactionDTO transactionDTO) {
         if(transactionDTO instanceof EnvelopeTransactionDTO) {
             return transactionMapper.toEnvelopeDTO(createEnvelopeTransaction((EnvelopeTransactionDTO) transactionDTO));
@@ -83,16 +85,17 @@ public class TransactionServiceImpl<T extends TransactionDTO> implements Transac
     @Override
     public List<GoalTransactionDTO> getGoalTransactionsByWalletID(String token, Long walletID) {
         Wallet wallet = walletService.getWalletEntityByID(token, walletID);
-        return transactionMapper.toGoalDTOs((List<GoalTransaction>) goalTransactionRepository.findAllByWallet(wallet));
+        return transactionMapper.toGoalDTOs(goalTransactionRepository.findAllByWallet(wallet));
     }
 
     @Override
     public List<EnvelopeTransactionDTO> getEnvelopeTransactionsByWalletID(String token, Long walletID) {
         Wallet wallet = walletService.getWalletEntityByID(token, walletID);
-        return transactionMapper.toEnvelopeDTOs((List<EnvelopeTransaction>) envelopeTransactionRepository.findAllByWallet(wallet));
+        return transactionMapper.toEnvelopeDTOs(envelopeTransactionRepository.findAllByWallet(wallet));
     }
 
     @Override
+    @Transactional
     public TransactionDTO updateTransactionByID(String token, Long transactionID, TransactionDTO transactionDTO) {
         Transaction transaction = transactionRepositoryFacade.getTransactionByID(transactionID);
         if(transaction == null) {
@@ -118,6 +121,7 @@ public class TransactionServiceImpl<T extends TransactionDTO> implements Transac
 
 
     @Override
+    @Transactional
     public void deleteTransactionByID(String token, Long transactionID) {
         checkOwnership(token, transactionID);
         Transaction transaction = transactionRepositoryFacade.getTransactionByID(transactionID);

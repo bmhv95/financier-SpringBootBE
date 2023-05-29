@@ -13,8 +13,8 @@ public class ExceptionController {
         return new ResponseException(message, messageKey, HttpStatus.CONFLICT);
     }
 
-    public static ResponseException badRequest() {
-        return new ResponseException(BAD_REQUEST_MESSAGE, BAD_REQUEST_MESSAGE_KEY, HttpStatus.BAD_REQUEST);
+    public static ResponseException badRequest(String message, String messageKey) {
+        return new ResponseException(message, messageKey, HttpStatus.BAD_REQUEST);
     }
 
     public static ResponseException internalServerError(String message, String messageKey) {

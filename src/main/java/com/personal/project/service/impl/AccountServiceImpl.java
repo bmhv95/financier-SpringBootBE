@@ -24,6 +24,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -41,20 +42,8 @@ public class AccountServiceImpl implements AccountService {
     private final AuthenticationManager authenticationManager;
     private final CustomUserDetailsService customUserDetailsService;
 
-
-//    @Override
-//    public AccountDTO createNewAccount(AccountDTO accountDTO) {
-//        checkDTO(accountDTO);
-//
-//        Account newAccount = Account.builder()
-//                .accountName(accountDTO.getAccountName())
-//                .email(accountDTO.getEmail())
-//                .phoneNumber(accountDTO.getPhoneNumber())
-//                .build();
-//
-//        return accountMapper.accountToAccountDTO(accountRepository.save(newAccount));
-//    }
-
+    @Override
+    @Transactional
     public AccountDTO createNewAccount(JwtLoginRequest jwtLoginRequest) {
         if (accountRepository.existsByEmail(jwtLoginRequest.getEmail())) {
             log.error("Email is already registered: " + jwtLoginRequest.getEmail());
@@ -73,6 +62,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
+    @Transactional
     public JwtResponse authenticateAccount(JwtLoginRequest jwtLoginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(jwtLoginRequest.getEmail(), jwtLoginRequest.getPassword())
@@ -116,7 +106,6 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public AccountDTO updateAccountByToken(String token, FullAccountDTO accountDTO) {
         String email = jwtUtils.getEmailFromHeader(token);
-        checkDTO(accountDTO);
 
         return updateAccountByEmail(email, accountDTO);
     }
@@ -124,7 +113,6 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDTO updateAccountByID(Long id, FullAccountDTO accountDTO) {
-        checkDTO(accountDTO);
         Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account not found"));
         String email = account.getEmail();
         return updateAccountByEmail(email, accountDTO);
@@ -132,8 +120,6 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDTO updateAccountByEmail(String email, FullAccountDTO accountDTO) {
-        checkDTO(accountDTO);
-
         Account account = accountRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Account not found"));
         accountMapper.updateAccount(accountDTO, account);
         account.setPassword(passwordEncoder.encode(accountDTO.getPassword()));
@@ -156,11 +142,5 @@ public class AccountServiceImpl implements AccountService {
     public void deleteAccountByID(Long id) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account not found"));
         accountRepository.deleteById(id);
-    }
-
-    private void checkDTO(FullAccountDTO accountDTO) {
-        if(accountDTO == null){
-            throw new RuntimeException("AccountDTO is null");
-        }
     }
 }

@@ -23,8 +23,6 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public WalletDTO createNewWallet(String token, WalletDTO walletDTO) {
-        checkDTO(walletDTO);
-
         Account account = accountService.getAccountEntityFromToken(token);
 
         Wallet wallet = Wallet.builder()

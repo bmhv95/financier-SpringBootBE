@@ -27,21 +27,16 @@ public class GoalServiceImpl implements GoalService{
     private final AccountService accountService;
     @Override
     public GoalDTO createNewGoal(String token, GoalDTO goalDTO) {
-        checkDTO(goalDTO);
-
         Account account = accountService.getAccountEntityFromToken(token);
 
         Goal goal = Goal.builder()
                 .goalName(goalDTO.getGoalName())
                 .goalAmount(goalDTO.getGoalAmount())
                 .goalCurrentBalance(goalDTO.getGoalCurrentBalance() == null ? BigDecimal.ZERO : goalDTO.getGoalCurrentBalance())
+                .goalStartDate(goalDTO.getGoalStartDate() == null ? LocalDate.now() : goalDTO.getGoalStartDate())
                 .goalEndDate(goalDTO.getGoalEndDate())
                 .account(account)
                 .build();
-
-        if(goalDTO.getGoalStartDate() != null){
-            goal.setGoalStartDate(goalDTO.getGoalStartDate());
-        }
 
         return goalMapper.goalToGoalDTO(goalRepository.save(goal));
     }
@@ -64,7 +59,6 @@ public class GoalServiceImpl implements GoalService{
     @Override
     public GoalDTO updateGoalByID(String token, Long goalID, GoalDTO goalDTO) {
         checkOwnership(token, goalID);
-        checkDTO(goalDTO);
 
         Goal goal = goalRepository.findById(goalID).get();
 
@@ -106,9 +100,5 @@ public class GoalServiceImpl implements GoalService{
         if(!goal.getAccount().getAccountID().equals(account.getAccountID())) {
             throw new RuntimeException("You are not the owner of this goal");
         }
-    }
-
-    private void checkDTO(GoalDTO goalDTO){
-        return;
     }
 }
