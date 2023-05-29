@@ -11,6 +11,8 @@ public interface TransactionService<T extends TransactionDTO> {
 
     List<T> getAllTransactions(String token);
 
+    T getTransactionByID(String token, Long transactionID);
+
     List<EnvelopeTransactionDTO> getAllEnvelopeTransactions(String token);
 
     List<GoalTransactionDTO> getAllGoalTransactions(String token);
@@ -22,4 +24,6 @@ public interface TransactionService<T extends TransactionDTO> {
     List<T> getEnvelopeTransactionsByWalletID(String token, Long walletID);
 
     T updateTransactionByID(String token, Long transactionID, T transactionDTO);
+
+    void deleteTransactionByID(String token, Long transactionID);
 }

@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Entity
 @Data
 @SuperBuilder
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -22,6 +23,7 @@ public abstract class Transaction {
     @Column(name = "transaction_id")
     private Long transactionID;
 
+    @Column(nullable = false)
     private BigDecimal transactionAmount;
     private String transactionName;
     private String transactionComment;
@@ -30,7 +32,7 @@ public abstract class Transaction {
     private LocalDate transactionDate;
 
     @ManyToOne
-    @JoinColumn(name = "wallet_id")
+    @JoinColumn(name = "wallet_id", nullable = false)
     private Wallet wallet;
 
 //    @PostPersist

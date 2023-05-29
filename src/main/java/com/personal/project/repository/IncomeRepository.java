@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface IncomeRepository extends JpaRepository<Income, Long> {
-    @Query("SELECT i FROM Income i WHERE i.account.accountID = ?1")
+    @Query("SELECT i FROM Income i WHERE i.wallet.account.accountID = ?1")
     List<Income> getIncomesByAccountID(Long accountID);
 
     List<Income> findByWallet(Wallet wallet);

@@ -6,6 +6,7 @@ import com.personal.project.entity.GoalTransaction;
 import com.personal.project.entity.Transaction;
 import com.personal.project.repository.EnvelopeTransactionRepository;
 import com.personal.project.repository.GoalTransactionRepository;
+import com.personal.project.service.mapper.TransactionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.List;
 public class TransactionRepositoryFacadeImpl implements TransactionRepositoryFacade<Transaction> {
     private final GoalTransactionRepository goalTransactionRepository;
     private final EnvelopeTransactionRepository envelopeTransactionRepository;
+    private final TransactionMapper transactionMapper;
     @Override
     public List<Transaction> getAllTransactionsByEmail(String email) {
         List<Transaction> result = new ArrayList<>();

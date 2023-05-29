@@ -8,6 +8,7 @@ import com.personal.project.service.DTO.GoalTransactionDTO;
 import com.personal.project.service.DTO.TransactionDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 import java.util.List;
@@ -16,15 +17,29 @@ import java.util.List;
 public interface TransactionMapper {
     @Mapping(source = "goal.goalID", target = "goalID")
     @Mapping(source = "wallet.walletID", target = "walletID")
-//    @Mapping(target = "type", defaultValue = "GOAL")
+    @Mapping(target = "type", expression = "java(getType(goalTransaction))")
     GoalTransactionDTO toGoalDTO(GoalTransaction goalTransaction);
 
     List<GoalTransactionDTO> toGoalDTOs(List<GoalTransaction> goalTransactions);
 
+    @Mapping(target = "transactionID", ignore = true)
+    @Mapping(target = "wallet", ignore = true)
+    void updateTransaction(TransactionDTO transactionDTO, @MappingTarget Transaction transaction);
+
     @Mapping(source = "envelope.envelopeID", target = "envelopeID")
     @Mapping(source = "wallet.walletID", target = "walletID")
-//    @Mapping(target = "type", defaultValue = "ENVELOPE")
+    @Mapping(target = "type", expression = "java(getType(envelopeTransaction))")
     EnvelopeTransactionDTO toEnvelopeDTO(EnvelopeTransaction envelopeTransaction);
 
     List<EnvelopeTransactionDTO> toEnvelopeDTOs(List<EnvelopeTransaction> envelopeTransactions);
+
+    default String getType(Transaction transaction){
+        if (transaction instanceof GoalTransaction){
+            return "goal";
+        }
+        if (transaction instanceof EnvelopeTransaction){
+            return "envelope";
+        }
+        return null;
+    }
 }

@@ -32,7 +32,7 @@ public class TransactionServiceImpl<T extends TransactionDTO> implements Transac
     private final WalletService walletService;
 
     @Override
-    public TransactionDTO createTransaction(String token, TransactionDTO transactionDTO) {
+    public T createTransaction(String token, TransactionDTO transactionDTO) {
         if(transactionDTO instanceof EnvelopeTransactionDTO) {
             return (T) transactionMapper.toEnvelopeDTO(createEnvelopeTransaction((EnvelopeTransactionDTO) transactionDTO));
         } else if (transactionDTO instanceof GoalTransactionDTO) {
@@ -47,6 +47,16 @@ public class TransactionServiceImpl<T extends TransactionDTO> implements Transac
         result.addAll(getAllEnvelopeTransactions(token));
         result.addAll(getAllGoalTransactions(token));
         return result;
+    }
+
+    public T getTransactionByID(String token, Long transactionID) {
+        Transaction transaction = transactionRepositoryFacade.getTransactionByID(transactionID);
+        if(transaction instanceof EnvelopeTransaction) {
+            return (T) transactionMapper.toEnvelopeDTO((EnvelopeTransaction) transaction);
+        } else if (transaction instanceof GoalTransaction) {
+            return (T) transactionMapper.toGoalDTO((GoalTransaction) transaction);
+        }
+        return null;
     }
 
     @Override
@@ -83,7 +93,37 @@ public class TransactionServiceImpl<T extends TransactionDTO> implements Transac
 
     @Override
     public TransactionDTO updateTransactionByID(String token, Long transactionID, TransactionDTO transactionDTO) {
-        return null;
+        Transaction transaction = transactionRepositoryFacade.getTransactionByID(transactionID);
+        if(transaction == null) {
+            throw new RuntimeException("Transaction not found");
+        }
+
+        transactionMapper.updateTransaction(transactionDTO, transaction);
+        transaction.setWallet(walletRepository.findById(transactionDTO.getWalletID()).orElseThrow(() -> new RuntimeException("Wallet not found")));
+
+        if(transaction instanceof EnvelopeTransaction envelopeTransaction) {
+            EnvelopeTransactionDTO envelopeTransactionDTO = (EnvelopeTransactionDTO) transactionDTO;
+            envelopeTransaction.setEnvelope(envelopeRepository.findById(envelopeTransactionDTO.getEnvelopeID()).orElseThrow(() -> new RuntimeException("Envelope not found")));
+            envelopeTransactionRepository.save(envelopeTransaction);
+            return transactionMapper.toEnvelopeDTO(envelopeTransaction);
+        } else {
+            GoalTransaction goalTransaction = (GoalTransaction) transaction;
+            GoalTransactionDTO goalTransactionDTO = (GoalTransactionDTO) transactionDTO;
+            goalTransaction.setGoal(goalRepository.findById(goalTransactionDTO.getGoalID()).orElseThrow(() -> new RuntimeException("Goal not found")));
+            goalTransactionRepository.save(goalTransaction);
+            return transactionMapper.toGoalDTO(goalTransaction);
+        }
+    }
+
+
+    @Override
+    public void deleteTransactionByID(String token, Long transactionID) {
+        checkOwnership(token, transactionID);
+        Transaction transaction = transactionRepositoryFacade.getTransactionByID(transactionID);
+        if(transaction == null) {
+            throw new RuntimeException("Transaction not found");
+        }
+        transactionRepositoryFacade.deleteTransactionByID(transactionID);
     }
 
     private GoalTransaction createGoalTransaction(GoalTransactionDTO goalTransactionDTO) {
@@ -111,5 +151,13 @@ public class TransactionServiceImpl<T extends TransactionDTO> implements Transac
                         : walletRepository.findById(envelopeTransactionDTO.getWalletID()).get())
                 .build();
         return envelopeTransactionRepository.save(envelopeTransaction);
+    }
+
+    private void checkOwnership(String token, Long transactionID) {
+        Account account = accountService.getAccountEntityFromToken(token);
+        Transaction transaction = transactionRepositoryFacade.getTransactionByID(transactionID);
+        if(!transaction.getWallet().getAccount().equals(account)) {
+            throw new RuntimeException("You are not the owner of this transaction");
+        }
     }
 }

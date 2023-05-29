@@ -1,5 +1,6 @@
 package com.personal.project.rest.controller;
 
+import com.personal.project.entity.GoalTransaction;
 import com.personal.project.rest.TransactionAPI;
 import com.personal.project.service.DTO.EnvelopeTransactionDTO;
 import com.personal.project.service.DTO.GoalTransactionDTO;
@@ -22,56 +23,64 @@ public class TransactionResource implements TransactionAPI{
     @Override
     public ResponseEntity<EnvelopeTransactionDTO> createEnvelopeTransaction(String token, EnvelopeTransactionDTO envelopeTransactionDTO) {
         EnvelopeTransactionDTO newEnvelopeTransaction = (EnvelopeTransactionDTO) transactionService.createTransaction(token, envelopeTransactionDTO);
-        return ResponseEntity.created(URI.create("/api/transactions/envelope/" + newEnvelopeTransaction.getTransactionID())).body(newEnvelopeTransaction);
+        return ResponseEntity.created(URI.create("/api/transactions/envelopes/" + newEnvelopeTransaction.getTransactionID())).body(newEnvelopeTransaction);
     }
 
     @Override
     public ResponseEntity<GoalTransactionDTO> createGoalTransaction(String token, GoalTransactionDTO goalTransactionDTO) {
-        return null;
+        GoalTransactionDTO newGoalTransaction = (GoalTransactionDTO) transactionService.createTransaction(token, goalTransactionDTO);
+        return ResponseEntity.created(URI.create("/api/transactions/goals/" + newGoalTransaction.getTransactionID())).body(newGoalTransaction);
     }
 
     @Override
     public ResponseEntity<List<TransactionDTO>> getAllTransactions(String token) {
-        return null;
+        return ResponseEntity.ok(transactionService.getAllTransactions(token));
     }
 
     @Override
     public ResponseEntity<List<EnvelopeTransactionDTO>> getAllEnvelopeTransactions(String token) {
-        return null;
+        return ResponseEntity.ok(transactionService.getAllEnvelopeTransactions(token));
     }
 
     @Override
     public ResponseEntity<EnvelopeTransactionDTO> getEnvelopeTransactionByEnvelopeId(String token, Long envelopeID) {
-        return null;
+        return ResponseEntity.ok((EnvelopeTransactionDTO) transactionService.getTransactionByID(token, envelopeID));
     }
 
     @Override
     public ResponseEntity<List<GoalTransactionDTO>> getAllGoalTransactions(String token) {
-        return null;
+        return ResponseEntity.ok(transactionService.getAllGoalTransactions(token));
     }
 
     @Override
     public ResponseEntity<GoalTransactionDTO> getGoalTransactionByGoalId(String token, Long goalID) {
-        return null;
+        return ResponseEntity.ok((GoalTransactionDTO) transactionService.getTransactionByID(token, goalID));
     }
 
     @Override
     public ResponseEntity<List<TransactionDTO>> getAllTransactionsByWalletID(String token, Long walletID) {
-        return null;
+        return ResponseEntity.ok(transactionService.getAllTransactionsByWalletID(token, walletID));
     }
 
     @Override
     public ResponseEntity<TransactionDTO> getTransactionById(String token, Long id) {
-        return null;
+        return ResponseEntity.ok(transactionService.getTransactionByID(token, id));
     }
 
     @Override
-    public ResponseEntity<TransactionDTO> updateTransactionById(String token, Long id, TransactionDTO transactionDTO) {
-        return null;
+    public ResponseEntity<EnvelopeTransactionDTO> updateEnvelopeTransactionById(String token, Long id, EnvelopeTransactionDTO envelopeTransactionDTO) {
+        return ResponseEntity.ok((EnvelopeTransactionDTO) transactionService.updateTransactionByID(token, id, envelopeTransactionDTO));
     }
+
+    @Override
+    public ResponseEntity<GoalTransactionDTO> updateGoalTransactionById(String token, Long id, GoalTransactionDTO goalTransactionDTO) {
+        return ResponseEntity.ok((GoalTransactionDTO) transactionService.updateTransactionByID(token, id, goalTransactionDTO));
+    }
+
 
     @Override
     public ResponseEntity<Void> deleteTransactionById(String token, Long id) {
-        return null;
+        transactionService.deleteTransactionByID(token, id);
+        return ResponseEntity.noContent().build();
     }
 }

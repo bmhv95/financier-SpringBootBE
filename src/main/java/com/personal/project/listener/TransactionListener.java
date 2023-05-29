@@ -1,5 +1,6 @@
 package com.personal.project.listener;
 
+import com.personal.project.entity.EnvelopeTransaction;
 import com.personal.project.entity.Transaction;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
@@ -15,7 +16,7 @@ public class TransactionListener {
         updateWalletMoney(transaction);
         updateTransactionWallet(transaction);
     }
-    public void updateWalletMoney(Transaction transaction) {
+    private void updateWalletMoney(Transaction transaction) {
         if(transaction.getTransactionAmount() != null) {
             BigDecimal walletBalance = transaction.getWallet().getWalletBalance();
             BigDecimal newBalance = walletBalance.add(transaction.getTransactionAmount());
@@ -23,7 +24,7 @@ public class TransactionListener {
         }
     }
 
-    public void updateTransactionWallet(Transaction transaction) {
+    private void updateTransactionWallet(Transaction transaction) {
         if(previousTransaction != null && !previousTransaction.getWallet().equals(transaction.getWallet())) {
             BigDecimal previousWalletBalance = previousTransaction.getWallet().getWalletBalance();
             BigDecimal newBalance = previousWalletBalance.subtract(transaction.getTransactionAmount());
