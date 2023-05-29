@@ -1,22 +1,21 @@
 package com.personal.project.service.impl;
 
 import com.personal.project.entity.Account;
-import com.personal.project.entity.AccountRoleAssignment;
+import com.personal.project.exception.ExceptionController;
 import com.personal.project.repository.AccountRepository;
 import com.personal.project.service.AccountRoleAssignmentService;
 import com.personal.project.service.AccountService;
 import com.personal.project.service.CustomUserDetails;
-import com.personal.project.service.CustomUserDetailsService;
 import com.personal.project.service.DTO.AccountDTO;
 import com.personal.project.service.DTO.FullAccountDTO;
 import com.personal.project.service.DTO.JwtLoginRequest;
 import com.personal.project.service.DTO.JwtResponse;
 import com.personal.project.service.mapper.AccountMapper;
 import com.personal.project.util.JwtUtils;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -40,14 +39,13 @@ public class AccountServiceImpl implements AccountService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final AuthenticationManager authenticationManager;
-    private final CustomUserDetailsService customUserDetailsService;
 
     @Override
     @Transactional
     public AccountDTO createNewAccount(JwtLoginRequest jwtLoginRequest) {
         if (accountRepository.existsByEmail(jwtLoginRequest.getEmail())) {
-            log.error("Email is already registered: " + jwtLoginRequest.getEmail());
-            throw new RuntimeException("Email is already registered");
+            log.warn("Email is already registered: " + jwtLoginRequest.getEmail());
+            throw ExceptionController.accountExisted(jwtLoginRequest.getEmail());
         }
 
         Account account = new Account();
@@ -56,7 +54,7 @@ public class AccountServiceImpl implements AccountService {
         account.setAccountName(StringUtils.substringBefore(jwtLoginRequest.getEmail(), '@'));
         Account newAccount = accountRepository.save(account);
 
-        AccountRoleAssignment userRole = accountRoleAssignmentService.createNewAccountRoleAssignment(newAccount);
+        accountRoleAssignmentService.createNewAccountRoleAssignment(newAccount);
 
         return accountMapper.accountToAccountDTO(newAccount);
     }
@@ -83,13 +81,14 @@ public class AccountServiceImpl implements AccountService {
 
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<AccountDTO> getAllAccounts() {
         return accountMapper.accountsToAccountDTOs(accountRepository.findAll());
     }
 
     @Override
     public AccountDTO getAccountByID(Long id) {
-        return accountMapper.accountToAccountDTO(accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account not found")));
+        return accountMapper.accountToAccountDTO(accountRepository.findById(id).orElseThrow(() -> ExceptionController.accountNotFound(String.valueOf(id))));
     }
 
     @Override
@@ -98,9 +97,9 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Account getAccountEntityFromToken(String token){
+    public Account getAccountEntityFromToken(String token) {
         String email = jwtUtils.getEmailFromHeader(token);
-        return accountRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Account not found"));
+        return accountRepository.findByEmail(email).orElseThrow(() -> ExceptionController.accountNotFound(email));
     }
 
     @Override
@@ -113,14 +112,14 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public AccountDTO updateAccountByID(Long id, FullAccountDTO accountDTO) {
-        Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account not found"));
+        Account account = accountRepository.findById(id).orElseThrow(() -> ExceptionController.accountNotFound(String.valueOf(id)));
         String email = account.getEmail();
         return updateAccountByEmail(email, accountDTO);
     }
 
     @Override
     public AccountDTO updateAccountByEmail(String email, FullAccountDTO accountDTO) {
-        Account account = accountRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Account not found"));
+        Account account = accountRepository.findByEmail(email).orElseThrow(() -> ExceptionController.accountNotFound(email));
         accountMapper.updateAccount(accountDTO, account);
         account.setPassword(passwordEncoder.encode(accountDTO.getPassword()));
         return accountMapper.accountToAccountDTO(accountRepository.save(account));
@@ -134,13 +133,15 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void deleteAccountByEmail(String email) {
-        Account account = accountRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Account not found"));
+        Account account = accountRepository.findByEmail(email).orElseThrow(() -> ExceptionController.accountNotFound(email));
         accountRepository.deleteById(account.getAccountID());
     }
 
     @Override
     public void deleteAccountByID(Long id) {
-        Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account not found"));
+        if(!accountRepository.existsById(id)){
+            throw ExceptionController.accountNotFound(String.valueOf(id));
+        }
         accountRepository.deleteById(id);
     }
 }

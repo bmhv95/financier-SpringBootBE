@@ -2,6 +2,7 @@ package com.personal.project.service.impl;
 
 import com.personal.project.entity.Account;
 import com.personal.project.entity.Goal;
+import com.personal.project.exception.ExceptionController;
 import com.personal.project.repository.GoalRepository;
 import com.personal.project.service.AccountService;
 import com.personal.project.service.DTO.GoalDTO;
@@ -50,17 +51,16 @@ public class GoalServiceImpl implements GoalService{
 
     @Override
     public GoalDTO getGoalByID(String token, Long goalID) {
-        checkOwnership(token, goalID);
-        return goalMapper.goalToGoalDTO(
-                goalRepository.findById(goalID).get()
-        );
+        Goal goal = goalRepository.findById(goalID).orElseThrow(() -> ExceptionController.goalNotFound(goalID));
+        checkOwnership(token, goal);
+        return goalMapper.goalToGoalDTO(goal);
     }
 
     @Override
     public GoalDTO updateGoalByID(String token, Long goalID, GoalDTO goalDTO) {
-        checkOwnership(token, goalID);
+        Goal goal = goalRepository.findById(goalID).orElseThrow(() -> ExceptionController.goalNotFound(goalID));
 
-        Goal goal = goalRepository.findById(goalID).get();
+        checkOwnership(token, goal);
 
         goalMapper.updateGoal(goalDTO, goal);
 
@@ -71,7 +71,8 @@ public class GoalServiceImpl implements GoalService{
 
     @Override
     public void deleteGoalByID(String token, Long goalID) {
-        checkOwnership(token, goalID);
+        Goal goal = goalRepository.findById(goalID).orElseThrow(() -> ExceptionController.goalNotFound(goalID));
+        checkOwnership(token, goal);
         goalRepository.deleteById(goalID);
     }
 
@@ -94,11 +95,10 @@ public class GoalServiceImpl implements GoalService{
         return result;
     }
 
-    private void checkOwnership(String token, Long goalID) {
+    private void checkOwnership(String token, Goal goal) {
         Account account = accountService.getAccountEntityFromToken(token);
-        Goal goal = goalRepository.findById(goalID).orElseThrow(() -> new RuntimeException("Goal not found"));
         if(!goal.getAccount().getAccountID().equals(account.getAccountID())) {
-            throw new RuntimeException("You are not the owner of this goal");
+            throw ExceptionController.forbidden();
         }
     }
 }

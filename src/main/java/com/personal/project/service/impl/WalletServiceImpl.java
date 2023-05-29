@@ -2,6 +2,7 @@ package com.personal.project.service.impl;
 
 import com.personal.project.entity.Account;
 import com.personal.project.entity.Wallet;
+import com.personal.project.exception.ExceptionController;
 import com.personal.project.repository.WalletRepository;
 import com.personal.project.service.AccountService;
 import com.personal.project.service.DTO.WalletDTO;
@@ -51,16 +52,18 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public Wallet getWalletEntityByID(String token, Long walletID) {
-        checkOwnership(token, walletID);
-        return walletRepository.findById(walletID).get();
+        Wallet wallet = walletRepository.findById(walletID).orElseThrow(() -> ExceptionController.walletNotFound(walletID));
+
+        checkOwnership(token, wallet);
+
+        return wallet;
     }
 
     @Override
     public WalletDTO updateWalletByID(String token, Long walletID, WalletDTO walletDTO) {
-        checkOwnership(token, walletID);
-        checkDTO(walletDTO);
+        Wallet wallet = walletRepository.findById(walletID).orElseThrow(() -> ExceptionController.walletNotFound(walletID));
+        checkOwnership(token, wallet);
 
-        Wallet wallet = walletRepository.findById(walletID).get();
         walletMapper.updateWallet(walletDTO, wallet);
 
         return walletMapper.walletToWalletDTO(
@@ -70,19 +73,15 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public void deleteWalletByID(String token, Long walletID) {
-        checkOwnership(token, walletID);
+        Wallet wallet = walletRepository.findById(walletID).orElseThrow(() -> ExceptionController.walletNotFound(walletID));
+        checkOwnership(token, wallet);
         walletRepository.deleteById(walletID);
     }
 
-    private void checkDTO(WalletDTO walletDTO) {
-        return;
-    }
-
-    private void checkOwnership(String token, Long walletID) {
+    private void checkOwnership(String token, Wallet wallet) {
         Account account = accountService.getAccountEntityFromToken(token);
-        Wallet wallet = walletRepository.findById(walletID).orElseThrow(() -> new RuntimeException("Wallet not found"));
         if (!wallet.getAccount().getAccountID().equals(account.getAccountID())) {
-            throw new RuntimeException("You are not the owner of this wallet");
+            throw ExceptionController.forbidden();
         }
     }
 }

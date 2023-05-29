@@ -1,7 +1,7 @@
 package com.personal.project.service;
 
 import com.personal.project.entity.Account;
-import com.personal.project.service.CustomUserDetails;
+import com.personal.project.exception.ExceptionController;
 import com.personal.project.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +15,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final AccountRepository accountRepository;
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Account account = accountRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Cannot find email: " + email));
+        Account account = accountRepository.findByEmail(email).orElseThrow(() -> ExceptionController.accountNotFound(email));
 
         return CustomUserDetails.build(account);
     }

@@ -2,6 +2,7 @@ package com.personal.project.service.impl;
 
 import com.personal.project.entity.Account;
 import com.personal.project.entity.Envelope;
+import com.personal.project.exception.ExceptionController;
 import com.personal.project.repository.EnvelopeRepository;
 import com.personal.project.service.AccountService;
 import com.personal.project.service.DTO.EnvelopeDTO;
@@ -10,7 +11,6 @@ import com.personal.project.service.DTO.EnvelopeWithTransactionsDTO;
 import com.personal.project.service.EnvelopeService;
 import com.personal.project.service.TransactionService;
 import com.personal.project.service.mapper.EnvelopeMapper;
-import com.personal.project.util.JwtUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,6 @@ import java.util.List;
 public class EnvelopeServiceImpl implements EnvelopeService {
     private final EnvelopeRepository envelopeRepository;
     private final EnvelopeMapper envelopeMapper;
-    private final JwtUtils jwtUtils;
     private final AccountService accountService;
     private final TransactionService<EnvelopeTransactionDTO> transactionService;
     @Override
@@ -53,16 +52,17 @@ public class EnvelopeServiceImpl implements EnvelopeService {
 
     @Override
     public EnvelopeDTO getEnvelopeByID(String token, Long envelopeID) {
-        checkOwnership(token, envelopeID);
-        return envelopeMapper.envelopeToEnvelopeDTO(
-                envelopeRepository.findById(envelopeID).get());
+        Envelope envelope = envelopeRepository.findById(envelopeID).orElseThrow(() -> ExceptionController.envelopeNotFound(envelopeID));
+        checkOwnership(token, envelope);
+        return envelopeMapper.envelopeToEnvelopeDTO(envelope);
     }
 
     @Override
     public EnvelopeDTO updateEnvelopeByID(String token, Long envelopeID, EnvelopeDTO envelopeDTO) {
-        checkOwnership(token, envelopeID);
+        Envelope envelope = envelopeRepository.findById(envelopeID).orElseThrow(() -> ExceptionController.envelopeNotFound(envelopeID));
 
-        Envelope envelope = envelopeRepository.findById(envelopeID).get();
+        checkOwnership(token, envelope);
+
         envelopeMapper.updateEnvelope(envelopeDTO, envelope);
         return envelopeMapper.envelopeToEnvelopeDTO(
                 envelopeRepository.save(envelope)
@@ -71,7 +71,8 @@ public class EnvelopeServiceImpl implements EnvelopeService {
 
     @Override
     public void deleteEnvelopeByID(String token, Long envelopeID) {
-        checkOwnership(token, envelopeID);
+        Envelope envelope = envelopeRepository.findById(envelopeID).orElseThrow(() -> ExceptionController.envelopeNotFound(envelopeID));
+        checkOwnership(token, envelope);
         envelopeRepository.deleteById(envelopeID);
     }
 
@@ -84,7 +85,7 @@ public class EnvelopeServiceImpl implements EnvelopeService {
     @Override
     public List<EnvelopeDTO> getEnvelopesBelowPercentBalance(String token, Long percentage) {
         if(percentage < 0 || percentage > 100){
-            throw new IllegalArgumentException("Percentage must be between 0 and 100");
+            throw ExceptionController.badRequest("Percentage must be between 0 and 100", "ILLEGAL_ARGUMENT");
         }
         List<EnvelopeDTO> list = getAllEnvelopesByToken(token);
         return list.stream().filter(e -> e.getEnvelopeCurrentBalance().compareTo(e.getEnvelopeBudgetAmount().multiply(BigDecimal.valueOf((float)percentage/100))) < 0).toList();
@@ -119,11 +120,10 @@ public class EnvelopeServiceImpl implements EnvelopeService {
         return list.stream().sorted(Comparator.comparing(e -> e.getTransactions().stream().mapToInt(t -> t.getTransactionAmount().intValue()).sum())).limit(n).toList();
     }
 
-    private void checkOwnership(String token, Long envelopeID) {
+    private void checkOwnership(String token, Envelope envelope) {
         Account account = accountService.getAccountEntityFromToken(token);
-        Envelope envelope = envelopeRepository.findById(envelopeID).orElseThrow(() -> new IllegalArgumentException("Envelope not found"));
         if(!envelope.getAccount().getAccountID().equals(account.getAccountID())){
-            throw new IllegalArgumentException("You are not the owner of this envelope");
+            throw ExceptionController.forbidden();
         }
     }
 }

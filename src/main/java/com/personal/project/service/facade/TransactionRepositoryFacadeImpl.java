@@ -4,11 +4,9 @@ import com.personal.project.entity.Account;
 import com.personal.project.entity.EnvelopeTransaction;
 import com.personal.project.entity.GoalTransaction;
 import com.personal.project.entity.Transaction;
+import com.personal.project.exception.ExceptionController;
 import com.personal.project.repository.EnvelopeTransactionRepository;
 import com.personal.project.repository.GoalTransactionRepository;
-import com.personal.project.repository.TransactionRepository;
-import com.personal.project.service.DTO.TransactionDTO;
-import com.personal.project.service.mapper.TransactionMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +21,6 @@ import java.util.List;
 public class TransactionRepositoryFacadeImpl implements TransactionRepositoryFacade<Transaction> {
     private final GoalTransactionRepository goalTransactionRepository;
     private final EnvelopeTransactionRepository envelopeTransactionRepository;
-    private final TransactionMapper transactionMapper;
     @Override
     public List<Transaction> getAllTransactionsByEmail(String email) {
         List<Transaction> result = new ArrayList<>();
@@ -50,14 +47,14 @@ public class TransactionRepositoryFacadeImpl implements TransactionRepositoryFac
         } else if(envelopeTransaction != null) {
             return envelopeTransaction;
         } else {
-            throw new IllegalArgumentException("Transaction does not exist");
+            throw ExceptionController.transactionNotFound(transactionID);
         }
     }
 
     @Override
     public void deleteTransactionByID(Long transactionID) {
         if(!goalTransactionRepository.existsById(transactionID) && !envelopeTransactionRepository.existsById(transactionID)) {
-            throw new IllegalArgumentException("Transaction does not exist");
+            throw ExceptionController.transactionNotFound(transactionID);
         }
         goalTransactionRepository.deleteById(transactionID);
         envelopeTransactionRepository.deleteById(transactionID);
