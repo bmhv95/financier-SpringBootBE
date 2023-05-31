@@ -22,7 +22,7 @@ public interface GoalAPI {
     ResponseEntity<GoalDTO> getGoalById(@RequestHeader("Authorization") String token, @PathVariable Long id);
 
     @PutMapping("/{id}")
-    ResponseEntity<GoalDTO> updateGoalById(@RequestHeader("Authorization") String token, @PathVariable Long id, @Valid @RequestBody GoalDTO goalDTO);
+    ResponseEntity<GoalDTO> updateGoalById(@RequestHeader("Authorization") String token, @PathVariable Long id, @RequestBody GoalDTO goalDTO);
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteGoalById(@RequestHeader("Authorization") String token, @PathVariable Long id);

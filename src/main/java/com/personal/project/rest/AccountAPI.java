@@ -2,7 +2,6 @@ package com.personal.project.rest;
 
 import com.personal.project.service.DTO.AccountDTO;
 import com.personal.project.service.DTO.FullAccountDTO;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +14,7 @@ public interface AccountAPI {
     ResponseEntity<AccountDTO> getAccount(@RequestHeader("Authorization") String token);
 
     @PutMapping
-    ResponseEntity<AccountDTO> updateAccount(@RequestHeader("Authorization") String token, @RequestBody @Valid FullAccountDTO accountDTO);
+    ResponseEntity<AccountDTO> updateAccount(@RequestHeader("Authorization") String token, @RequestBody FullAccountDTO accountDTO);
 
     @DeleteMapping
     ResponseEntity<Void> deleteAccount(@RequestHeader("Authorization") String token);

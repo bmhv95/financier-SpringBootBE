@@ -17,7 +17,7 @@ import lombok.experimental.SuperBuilder;
 @EntityListeners({TransactionListener.class, EnvelopeListener.class})
 public class EnvelopeTransaction extends Transaction {
     @ManyToOne
-    @JoinColumn(name = "envelope_id", nullable = false)
+    @JoinColumn(name = "envelope_id")
     private Envelope envelope;
 
 }

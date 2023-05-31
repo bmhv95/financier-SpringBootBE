@@ -121,7 +121,9 @@ public class AccountServiceImpl implements AccountService {
     public AccountDTO updateAccountByEmail(String email, FullAccountDTO accountDTO) {
         Account account = accountRepository.findByEmail(email).orElseThrow(() -> ExceptionController.accountNotFound(email));
         accountMapper.updateAccount(accountDTO, account);
-        account.setPassword(passwordEncoder.encode(accountDTO.getPassword()));
+        if(accountDTO.getPassword() != null && !accountDTO.getPassword().isEmpty()){
+            account.setPassword(passwordEncoder.encode(accountDTO.getPassword()));
+        }
         return accountMapper.accountToAccountDTO(accountRepository.save(account));
     }
 

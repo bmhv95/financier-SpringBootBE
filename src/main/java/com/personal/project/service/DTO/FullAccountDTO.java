@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FullAccountDTO {
     private Long accountID;
-    @NotNull
     private String accountName;
     @NotNull
     private String password;

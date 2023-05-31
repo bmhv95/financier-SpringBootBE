@@ -36,7 +36,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     @Transactional
     public TransactionDTO createTransaction(String token, TransactionDTO transactionDTO) {
-        if(transactionDTO instanceof EnvelopeTransactionDTO) {
+        if (transactionDTO instanceof EnvelopeTransactionDTO) {
             return transactionMapper.toEnvelopeDTO(createEnvelopeTransaction(token, (EnvelopeTransactionDTO) transactionDTO));
         } else if (transactionDTO instanceof GoalTransactionDTO) {
             return transactionMapper.toGoalDTO(createGoalTransaction(token, (GoalTransactionDTO) transactionDTO));
@@ -57,7 +57,7 @@ public class TransactionServiceImpl implements TransactionService {
     public TransactionDTO getTransactionByID(String token, Long transactionID) {
         Transaction transaction = transactionRepositoryFacade.getTransactionByID(transactionID);
         checkOwnership(token, transaction);
-        if(transaction instanceof EnvelopeTransaction) {
+        if (transaction instanceof EnvelopeTransaction) {
             return transactionMapper.toEnvelopeDTO((EnvelopeTransaction) transaction);
         } else if (transaction instanceof GoalTransaction) {
             return transactionMapper.toGoalDTO((GoalTransaction) transaction);
@@ -104,17 +104,21 @@ public class TransactionServiceImpl implements TransactionService {
         checkOwnership(token, transaction);
 
         transactionMapper.updateTransaction(transactionDTO, transaction);
-        transaction.setWallet(walletService.getWalletEntityByID(token, transactionDTO.getWalletID()));
+        transaction.setWallet(transactionDTO.getWalletID() != null ? walletService.getWalletEntityByID(token, transactionDTO.getWalletID()) : transaction.getWallet());
 
-        if(transaction instanceof EnvelopeTransaction envelopeTransaction) {
+        if (transaction instanceof EnvelopeTransaction envelopeTransaction) {
             EnvelopeTransactionDTO envelopeTransactionDTO = (EnvelopeTransactionDTO) transactionDTO;
-            envelopeTransaction.setEnvelope(envelopeRepository.findById(envelopeTransactionDTO.getEnvelopeID()).orElseThrow(() -> ExceptionController.envelopeNotFound(envelopeTransactionDTO.getEnvelopeID())));
+            if (envelopeTransactionDTO.getEnvelopeID() != null) {
+                envelopeTransaction.setEnvelope(envelopeRepository.findById(envelopeTransactionDTO.getEnvelopeID()).orElseThrow(() -> ExceptionController.envelopeNotFound(envelopeTransactionDTO.getEnvelopeID())));
+            }
             envelopeTransactionRepository.save(envelopeTransaction);
             return transactionMapper.toEnvelopeDTO(envelopeTransaction);
         } else {
             GoalTransaction goalTransaction = (GoalTransaction) transaction;
             GoalTransactionDTO goalTransactionDTO = (GoalTransactionDTO) transactionDTO;
-            goalTransaction.setGoal(goalRepository.findById(goalTransactionDTO.getGoalID()).orElseThrow(() -> ExceptionController.goalNotFound(goalTransactionDTO.getGoalID())));
+            if (goalTransactionDTO.getGoalID() != null) {
+                goalTransaction.setGoal(goalRepository.findById(goalTransactionDTO.getGoalID()).orElseThrow(() -> ExceptionController.goalNotFound(goalTransactionDTO.getGoalID())));
+            }
             goalTransactionRepository.save(goalTransaction);
             return transactionMapper.toGoalDTO(goalTransaction);
         }
@@ -172,7 +176,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void checkOwnership(String token, Transaction transaction) {
         Account account = accountService.getAccountEntityFromToken(token);
-        if(!transaction.getWallet().getAccount().equals(account)) {
+        if (!transaction.getWallet().getAccount().equals(account)) {
             throw ExceptionController.forbidden();
         }
     }

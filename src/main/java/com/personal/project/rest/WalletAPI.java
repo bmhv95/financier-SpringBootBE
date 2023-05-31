@@ -22,7 +22,7 @@ public interface WalletAPI {
     ResponseEntity<WalletDTO> getWalletByID(@RequestHeader("Authorization") String token, @PathVariable Long walletID);
 
     @PutMapping("/{walletID}")
-    ResponseEntity<WalletDTO> updateWalletByID(@RequestHeader("Authorization") String token, @PathVariable Long walletID, @Valid @RequestBody WalletDTO walletDTO);
+    ResponseEntity<WalletDTO> updateWalletByID(@RequestHeader("Authorization") String token, @PathVariable Long walletID, @RequestBody WalletDTO walletDTO);
 
     @DeleteMapping("/{walletID}")
     ResponseEntity<Void> deleteWalletByID(@RequestHeader("Authorization") String token, @PathVariable Long walletID);
@@ -37,7 +37,7 @@ public interface WalletAPI {
     ResponseEntity<IncomeDTO> createNewIncome(@RequestHeader("Authorization") String token, @PathVariable Long walletID, @Valid @RequestBody IncomeDTO incomeDTO);
 
     @PutMapping("/incomes/{incomeID}")
-    ResponseEntity<IncomeDTO> updateIncomeByID(@RequestHeader("Authorization") String token, @PathVariable Long incomeID, @Valid @RequestBody IncomeDTO incomeDTO);
+    ResponseEntity<IncomeDTO> updateIncomeByID(@RequestHeader("Authorization") String token, @PathVariable Long incomeID, @RequestBody IncomeDTO incomeDTO);
 
     @DeleteMapping("/incomes/{incomeID}")
     ResponseEntity<Void> deleteIncomeByID(@RequestHeader("Authorization") String token, @PathVariable Long incomeID);

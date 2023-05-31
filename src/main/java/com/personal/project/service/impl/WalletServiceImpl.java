@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -28,7 +29,7 @@ public class WalletServiceImpl implements WalletService {
 
         Wallet wallet = Wallet.builder()
                 .walletName(walletDTO.getWalletName())
-                .walletBalance(walletDTO.getWalletBalance())
+                .walletBalance(walletDTO.getWalletBalance() == null ? BigDecimal.ZERO : walletDTO.getWalletBalance())
                 .account(account)
                 .build();
 

@@ -41,10 +41,10 @@ public interface TransactionAPI {
     ResponseEntity<TransactionDTO> getTransactionById(@RequestHeader("Authorization") String token, @PathVariable Long id);
 
     @PutMapping("/envelopes/{id}")
-    ResponseEntity<EnvelopeTransactionDTO> updateEnvelopeTransactionById(@RequestHeader("Authorization") String token, @PathVariable Long id, @Valid @RequestBody EnvelopeTransactionDTO envelopeTransactionDTO);
+    ResponseEntity<EnvelopeTransactionDTO> updateEnvelopeTransactionById(@RequestHeader("Authorization") String token, @PathVariable Long id, @RequestBody EnvelopeTransactionDTO envelopeTransactionDTO);
 
     @PutMapping("/goals/{id}")
-    ResponseEntity<GoalTransactionDTO> updateGoalTransactionById(@RequestHeader("Authorization") String token, @PathVariable Long id, @Valid @RequestBody GoalTransactionDTO goalTransactionDTO);
+    ResponseEntity<GoalTransactionDTO> updateGoalTransactionById(@RequestHeader("Authorization") String token, @PathVariable Long id, @RequestBody GoalTransactionDTO goalTransactionDTO);
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteTransactionById(@RequestHeader("Authorization") String token, @PathVariable Long id);

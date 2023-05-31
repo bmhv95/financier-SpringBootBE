@@ -30,6 +30,12 @@ public class GoalServiceImpl implements GoalService{
     public GoalDTO createNewGoal(String token, GoalDTO goalDTO) {
         Account account = accountService.getAccountEntityFromToken(token);
 
+        if((goalDTO.getGoalEndDate() != null && goalDTO.getGoalEndDate().isBefore(LocalDate.now()))
+                || (goalDTO.getGoalStartDate() != null &&  goalDTO.getGoalEndDate() != null && goalDTO.getGoalStartDate().isBefore(goalDTO.getGoalEndDate()))) {
+            log.error("Date input error");
+            throw ExceptionController.badRequest("Date input error", "GOAL_DATE_ERROR");
+        }
+
         Goal goal = Goal.builder()
                 .goalName(goalDTO.getGoalName())
                 .goalAmount(goalDTO.getGoalAmount())

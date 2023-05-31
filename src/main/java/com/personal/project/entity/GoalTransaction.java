@@ -4,7 +4,6 @@ import com.personal.project.listener.GoalListener;
 import com.personal.project.listener.TransactionListener;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -19,6 +18,6 @@ import lombok.experimental.SuperBuilder;
 @EntityListeners({TransactionListener.class, GoalListener.class})
 public class GoalTransaction extends Transaction {
     @ManyToOne
-    @JoinColumn(name = "goal_id", nullable = false)
+    @JoinColumn(name = "goal_id")
     private Goal goal;
 }
