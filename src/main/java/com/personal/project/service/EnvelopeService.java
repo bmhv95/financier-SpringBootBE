@@ -6,7 +6,7 @@ import com.personal.project.service.DTO.EnvelopeWithTransactionsDTO;
 import java.time.LocalDate;
 import java.util.List;
 
-public interface EnvelopeService {
+public interface EnvelopeService<T extends EnvelopeDTO> {
 
     EnvelopeDTO createNewEnvelope(String token, EnvelopeDTO envelopeDTO);
 

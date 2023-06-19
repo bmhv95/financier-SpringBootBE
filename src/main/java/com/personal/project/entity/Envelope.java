@@ -1,49 +1,49 @@
 package com.personal.project.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Data
+@SuperBuilder
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type")
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class Envelope {
+public abstract class Envelope {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "envelope_id")
-    private Long envelopeID;
+    private Long ID;
 
-    private String envelopeName;
+    private String name;
+    private String description;
 
     @Column(nullable = false)
-    @Min(value = 0, message = "Envelope budget must not be negative")
-    private BigDecimal envelopeBudgetAmount;
+    private BigDecimal limit;
+
     @Column(nullable = false)
-    private BigDecimal envelopeCurrentBalance;
+    private BigDecimal spent;
+
+    @Column(nullable = false)
+    private BigDecimal allocated;
 
     @CreationTimestamp
-    private LocalDate envelopeDate;
+    private LocalDate createdDate;
 
     @UpdateTimestamp
-    private LocalDate updateDate;
+    private LocalDate updatedDate;
 
     @ManyToOne
     @JoinColumn(name = "acc_id")
     private Account account;
 
-    @OneToMany(mappedBy = "envelope")
-    private List<EnvelopeTransaction> envelopeTransaction;
+    private boolean isActive;
 }

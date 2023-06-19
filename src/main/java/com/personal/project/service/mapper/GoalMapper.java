@@ -15,6 +15,6 @@ public interface GoalMapper {
 
     List<GoalDTO> goalListToGoalDTOList(List<Goal> goals);
 
-    @Mapping(target = "goalID", ignore = true)
+    @Mapping(target = "ID", ignore = true)
     void updateGoal(GoalDTO goalDTO, @MappingTarget Goal goal);
 }

@@ -7,11 +7,18 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class FullAccountDTO {
-    private Long accountID;
-    private String accountName;
+    private Long ID;
+
     @NotNull
     private String password;
+
+    private String accountName;
+
+    private String firstName;
+    private String lastName;
+
     private String phoneNumber;
+
     @NotNull
     private String email;
 }

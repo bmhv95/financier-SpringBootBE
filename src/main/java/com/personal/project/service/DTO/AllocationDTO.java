@@ -9,13 +9,17 @@ import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
-public class WalletDTO {
+public class AllocationDTO {
     private Long ID;
 
     private String name;
     @NotNull
-    private BigDecimal balance;
-    private LocalDate updatedDate;
+    private BigDecimal amount;
 
-    private boolean isActive;
+    private LocalDate date;
+
+    @NotNull
+    private Long walletID;
+    @NotNull
+    private Long envelopeID;
 }

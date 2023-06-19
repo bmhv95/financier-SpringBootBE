@@ -136,7 +136,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void deleteAccountByEmail(String email) {
         Account account = accountRepository.findByEmail(email).orElseThrow(() -> ExceptionController.accountNotFound(email));
-        accountRepository.deleteById(account.getAccountID());
+        accountRepository.deleteById(account.getID());
     }
 
     @Override

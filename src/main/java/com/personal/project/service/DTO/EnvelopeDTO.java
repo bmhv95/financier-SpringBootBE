@@ -10,14 +10,17 @@ import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
-public class EnvelopeDTO {
-    private Long envelopeID;
+public abstract class EnvelopeDTO {
+    private Long ID;
 
-    private String envelopeName;
+    private String name;
+    private String description;
+
     @NotNull
     @Min(value = 0)
-    private BigDecimal envelopeBudgetAmount;
-    private BigDecimal envelopeCurrentBalance;
+    private BigDecimal limit;
+    private BigDecimal spent;
+    private BigDecimal allocated;
 
-    private LocalDate envelopeDate;
+    private boolean isActive;
 }

@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("/api/envelopes")
 @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public interface EnvelopeAPI {
-    @PostMapping({"/new"})
+    @PostMapping("/new")
     ResponseEntity<EnvelopeDTO> createNewEnvelope(@RequestHeader("Authorization") String token, @Valid @RequestBody EnvelopeDTO envelopeDTO);
 
     @GetMapping

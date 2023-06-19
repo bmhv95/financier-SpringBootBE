@@ -11,12 +11,12 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface IncomeMapper {
-    @Mapping(target = "walletID", source = "wallet.walletID")
+    @Mapping(target = "ID", source = "wallet.ID")
     IncomeDTO toIncomeDTO(Income income);
 
     List<IncomeDTO> toIncomeDTOs(List<Income> incomes);
 
-    @Mapping(target = "incomeID", ignore = true)
+    @Mapping(target = "ID", ignore = true)
     @Mapping(target = "wallet", ignore = true)
     void updateIncome(IncomeDTO incomeDTO, @MappingTarget Income income);
 }

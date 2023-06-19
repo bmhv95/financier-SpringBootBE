@@ -11,14 +11,17 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 public class GoalDTO {
-    private Long goalID;
+    private Long ID;
 
-    private String goalName;
+    private String name;
+    private String description;
 
     @NotNull
     @Min(value = 0)
-    private BigDecimal goalAmount;
-    private BigDecimal goalCurrentBalance;
-    private LocalDate goalStartDate;
-    private LocalDate goalEndDate;
+    private BigDecimal amount;
+    private BigDecimal currentBalance;
+    private LocalDate startDate;
+    private LocalDate endDate;
+
+    private boolean isActive;
 }

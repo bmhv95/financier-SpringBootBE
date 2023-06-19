@@ -1,12 +1,8 @@
 package com.personal.project.service.facade;
 
 import com.personal.project.entity.Account;
-import com.personal.project.entity.EnvelopeTransaction;
-import com.personal.project.entity.GoalTransaction;
 import com.personal.project.entity.Transaction;
 import com.personal.project.exception.ExceptionController;
-import com.personal.project.repository.EnvelopeTransactionRepository;
-import com.personal.project.repository.GoalTransactionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

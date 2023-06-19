@@ -6,16 +6,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
 public class IncomeDTO {
-    private Long incomeID;
+    private Long ID;
 
-    private String incomeName;
+    private String name;
     @NotNull
     @Min(value = 0)
-    private BigDecimal incomeAmount;
+    private BigDecimal amount;
+    private LocalDate date;
     private boolean recurring;
 
     private Long walletID;

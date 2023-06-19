@@ -1,11 +1,9 @@
 package com.personal.project.rest.controller;
 
-import com.personal.project.entity.GoalTransaction;
 import com.personal.project.rest.TransactionAPI;
 import com.personal.project.service.DTO.EnvelopeTransactionDTO;
 import com.personal.project.service.DTO.GoalTransactionDTO;
 import com.personal.project.service.DTO.TransactionDTO;
-import com.personal.project.service.ReportService;
 import com.personal.project.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +24,13 @@ public class TransactionResource implements TransactionAPI{
     @Override
     public ResponseEntity<EnvelopeTransactionDTO> createEnvelopeTransaction(String token, EnvelopeTransactionDTO envelopeTransactionDTO) {
         EnvelopeTransactionDTO newEnvelopeTransaction = (EnvelopeTransactionDTO) transactionService.createTransaction(token, envelopeTransactionDTO);
-        return ResponseEntity.created(URI.create("/api/transactions/envelopes/" + newEnvelopeTransaction.getTransactionID())).body(newEnvelopeTransaction);
+        return ResponseEntity.created(URI.create("/api/transactions/envelopes/" + newEnvelopeTransaction.getID())).body(newEnvelopeTransaction);
     }
 
     @Override
     public ResponseEntity<GoalTransactionDTO> createGoalTransaction(String token, GoalTransactionDTO goalTransactionDTO) {
         GoalTransactionDTO newGoalTransaction = (GoalTransactionDTO) transactionService.createTransaction(token, goalTransactionDTO);
-        return ResponseEntity.created(URI.create("/api/transactions/goals/" + newGoalTransaction.getTransactionID())).body(newGoalTransaction);
+        return ResponseEntity.created(URI.create("/api/transactions/goals/" + newGoalTransaction.getID())).body(newGoalTransaction);
     }
 
     @Override

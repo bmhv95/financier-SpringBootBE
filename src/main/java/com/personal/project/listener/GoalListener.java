@@ -1,6 +1,5 @@
 package com.personal.project.listener;
 
-import com.personal.project.entity.GoalTransaction;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 
@@ -17,21 +16,21 @@ public class GoalListener {
     }
 
     private void updateGoalMoney(GoalTransaction transaction) {
-        if(transaction.getTransactionAmount() != null) {
-            BigDecimal goalBalance = transaction.getGoal().getGoalCurrentBalance();
-            BigDecimal newBalance = goalBalance.add(transaction.getTransactionAmount());
-            transaction.getGoal().setGoalCurrentBalance(newBalance);
+        if(transaction.getAmount() != null) {
+            BigDecimal goalBalance = transaction.getGoal().getCurrentBalance();
+            BigDecimal newBalance = goalBalance.add(transaction.getAmount());
+            transaction.getGoal().setCurrentBalance(newBalance);
         }
     }
 
     private void updateGoalTarget(GoalTransaction transaction) {
         if(previousTransaction != null && !previousTransaction.getGoal().equals(transaction.getGoal())) {
-            BigDecimal previousGoalBalance = previousTransaction.getGoal().getGoalCurrentBalance();
-            BigDecimal newBalance = previousGoalBalance.subtract(transaction.getTransactionAmount());
-            previousTransaction.getGoal().setGoalCurrentBalance(newBalance);
+            BigDecimal previousGoalBalance = previousTransaction.getGoal().getCurrentBalance();
+            BigDecimal newBalance = previousGoalBalance.subtract(transaction.getAmount());
+            previousTransaction.getGoal().setCurrentBalance(newBalance);
 
-            transaction.getGoal().setGoalCurrentBalance(
-                    transaction.getGoal().getGoalCurrentBalance().add(transaction.getTransactionAmount())
+            transaction.getGoal().setCurrentBalance(
+                    transaction.getGoal().getCurrentBalance().add(transaction.getAmount())
             );
         }
     }

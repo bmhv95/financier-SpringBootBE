@@ -153,9 +153,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     private GoalTransaction createGoalTransaction(String token, GoalTransactionDTO goalTransactionDTO) {
         GoalTransaction goalTransaction = GoalTransaction.builder()
-                .transactionAmount(goalTransactionDTO.getTransactionAmount())
-                .transactionName(goalTransactionDTO.getTransactionName())
-                .transactionComment(goalTransactionDTO.getTransactionComment())
+                .amount(goalTransactionDTO.getAmount())
+                .name(goalTransactionDTO.getName())
+                .comment(goalTransactionDTO.getComment())
                 .goal(goalRepository.findById(goalTransactionDTO.getGoalID()).orElseThrow(() -> ExceptionController.goalNotFound(goalTransactionDTO.getGoalID())))
                 .wallet(walletService.getWalletEntityByID(token, goalTransactionDTO.getWalletID()))
                 .build();
@@ -165,9 +165,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     private EnvelopeTransaction createEnvelopeTransaction(String token, EnvelopeTransactionDTO envelopeTransactionDTO) {
         EnvelopeTransaction envelopeTransaction = EnvelopeTransaction.builder()
-                .transactionAmount(envelopeTransactionDTO.getTransactionAmount())
-                .transactionName(envelopeTransactionDTO.getTransactionName())
-                .transactionComment(envelopeTransactionDTO.getTransactionComment())
+                .amount(envelopeTransactionDTO.getAmount())
+                .name(envelopeTransactionDTO.getName())
+                .comment(envelopeTransactionDTO.getComment())
                 .envelope(envelopeRepository.findById(envelopeTransactionDTO.getEnvelopeID()).orElseThrow(() -> ExceptionController.envelopeNotFound(envelopeTransactionDTO.getEnvelopeID())))
                 .wallet(walletService.getWalletEntityByID(token, envelopeTransactionDTO.getWalletID()))
                 .build();
@@ -176,7 +176,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     private void checkOwnership(String token, Transaction transaction) {
         Account account = accountService.getAccountEntityFromToken(token);
-        if (!transaction.getWallet().getAccount().equals(account)) {
+        if (!transaction.getWallet().getAccount().getID().equals(account.getID())) {
             throw ExceptionController.forbidden();
         }
     }

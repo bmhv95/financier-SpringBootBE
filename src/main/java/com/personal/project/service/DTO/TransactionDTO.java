@@ -12,14 +12,14 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public abstract class TransactionDTO {
-    private Long transactionID;
+    private Long ID;
 
     @NotNull
-    private BigDecimal transactionAmount;
-    private String transactionName;
-    private String transactionComment;
+    private BigDecimal amount;
+    private String name;
+    private String comment;
 
-    private LocalDate transactionDate;
+    private LocalDate date;
     @NotNull
     private Long walletID;
 

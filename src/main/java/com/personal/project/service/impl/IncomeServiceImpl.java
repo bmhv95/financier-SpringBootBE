@@ -3,6 +3,7 @@ package com.personal.project.service.impl;
 import com.personal.project.entity.Account;
 import com.personal.project.entity.Income;
 import com.personal.project.entity.Wallet;
+import com.personal.project.exception.ExceptionController;
 import com.personal.project.repository.IncomeRepository;
 import com.personal.project.service.AccountService;
 import com.personal.project.service.DTO.IncomeDTO;
@@ -26,13 +27,11 @@ public class IncomeServiceImpl implements IncomeService {
     private final WalletService walletService;
     @Override
     public IncomeDTO createNewIncome(String token, Long walletID, IncomeDTO incomeDTO) {
-        checkDTO(incomeDTO);
-
         Account account = accountService.getAccountEntityFromToken(token);
 
         Income income = Income.builder()
-                .incomeName(incomeDTO.getIncomeName())
-                .incomeAmount(incomeDTO.getIncomeAmount())
+                .name(incomeDTO.getName())
+                .amount(incomeDTO.getAmount())
                 .wallet(walletService.getWalletEntityByID(token, walletID))
                 .build();
 
@@ -41,7 +40,7 @@ public class IncomeServiceImpl implements IncomeService {
 
     @Override
     public List<IncomeDTO> getAllIncomesByToken(String token) {
-        Long accountID = accountService.getAccountEntityFromToken(token).getAccountID();
+        Long accountID = accountService.getAccountEntityFromToken(token).getID();
         return incomeMapper.toIncomeDTOs(incomeRepository.getIncomesByAccountID(accountID));
     }
 
@@ -54,16 +53,17 @@ public class IncomeServiceImpl implements IncomeService {
 
     @Override
     public IncomeDTO getIncomeByID(String token, Long incomeID) {
-        checkOwnership(token, incomeID);
-        return incomeMapper.toIncomeDTO(incomeRepository.findById(incomeID).get());
+        Income income = incomeRepository.findById(incomeID).orElseThrow(() -> ExceptionController.incomeNotFound(incomeID));
+        checkOwnership(token, income);
+        return incomeMapper.toIncomeDTO(income);
     }
 
     @Override
     public IncomeDTO updateIncomeByID(String token, Long incomeID, IncomeDTO incomeDTO) {
-        checkOwnership(token, incomeID);
-        checkDTO(incomeDTO);
-        Income income = incomeRepository.findById(incomeID).get();
+        Income income = incomeRepository.findById(incomeID).orElseThrow(() -> ExceptionController.incomeNotFound(incomeID));
+        checkOwnership(token, income);
         incomeMapper.updateIncome(incomeDTO, income);
+
         Wallet wallet = walletService.getWalletEntityByID(token, incomeDTO.getWalletID());
         income.setWallet(wallet);
         return incomeMapper.toIncomeDTO(income);
@@ -71,18 +71,14 @@ public class IncomeServiceImpl implements IncomeService {
 
     @Override
     public void deleteIncomeByID(String token, Long incomeID) {
-        checkOwnership(token, incomeID);
+        Income income = incomeRepository.findById(incomeID).orElseThrow(() -> ExceptionController.incomeNotFound(incomeID));
+        checkOwnership(token, income);
         incomeRepository.deleteById(incomeID);
     }
 
-    private void checkDTO(IncomeDTO incomeDTO) {
-        return;
-    }
-
-    private void checkOwnership(String token, Long incomeID) {
+    private void checkOwnership(String token, Income income) {
         Account account = accountService.getAccountEntityFromToken(token);
-        Income income = incomeRepository.findById(incomeID).orElseThrow(() -> new RuntimeException("Income not found"));
-        if (!income.getWallet().getAccount().getAccountID().equals(account.getAccountID())) {
+        if (!income.getWallet().getAccount().getID().equals(account.getID())) {
             throw new RuntimeException("You are not the owner of this income");
         }
     }

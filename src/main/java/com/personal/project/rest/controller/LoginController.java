@@ -24,6 +24,6 @@ public class LoginController implements LoginAPI {
     @Override
     public ResponseEntity<AccountDTO> registerAccount(JwtLoginRequest jwtLoginRequest) {
         AccountDTO newAccount = accountService.createNewAccount(jwtLoginRequest);
-        return ResponseEntity.created(URI.create("/api/accounts/" + newAccount.getAccountID())).body(newAccount);
+        return ResponseEntity.created(URI.create("/api/accounts/" + newAccount.getID())).body(newAccount);
     }
 }

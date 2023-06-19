@@ -19,7 +19,7 @@ public class GoalResource implements GoalAPI {
     @Override
     public ResponseEntity<GoalDTO> createNewGoal(String token, GoalDTO goalDTO) {
         GoalDTO newGoal = goalService.createNewGoal(token, goalDTO);
-        return ResponseEntity.created(URI.create("/api/goals/" + newGoal.getGoalID())).body(newGoal);
+        return ResponseEntity.created(URI.create("/api/goals/" + newGoal.getID())).body(newGoal);
     }
 
     @Override

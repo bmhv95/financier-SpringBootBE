@@ -17,21 +17,21 @@ public class IncomeListener {
     }
 
     public void updateIncomeMoney(Income income) {
-        if (income.getIncomeAmount() != null) {
-            BigDecimal walletBalance = income.getWallet().getWalletBalance();
-            BigDecimal newBalance = walletBalance.add(income.getIncomeAmount());
-            income.getWallet().setWalletBalance(newBalance);
+        if (income.getAmount() != null) {
+            BigDecimal walletBalance = income.getWallet().getBalance();
+            BigDecimal newBalance = walletBalance.add(income.getAmount());
+            income.getWallet().setBalance(newBalance);
         }
     }
 
     public void updateIncomeWallet(Income income) {
         if (previousIncome != null && !previousIncome.getWallet().equals(income.getWallet())) {
-            BigDecimal previousWalletBalance = previousIncome.getWallet().getWalletBalance();
-            BigDecimal newBalance = previousWalletBalance.subtract(income.getIncomeAmount());
-            previousIncome.getWallet().setWalletBalance(newBalance);
+            BigDecimal previousWalletBalance = previousIncome.getWallet().getBalance();
+            BigDecimal newBalance = previousWalletBalance.subtract(income.getAmount());
+            previousIncome.getWallet().setBalance(newBalance);
 
-            income.getWallet().setWalletBalance(
-                    income.getWallet().getWalletBalance().add(income.getIncomeAmount())
+            income.getWallet().setBalance(
+                    income.getWallet().getBalance().add(income.getAmount())
             );
         }
     }

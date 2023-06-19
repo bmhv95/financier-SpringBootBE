@@ -24,7 +24,7 @@ public class EnvelopeResource implements EnvelopeAPI {
     public ResponseEntity<EnvelopeDTO> createNewEnvelope(String token, EnvelopeDTO envelopeDTO) {
         log.debug("createNewEnvelope");
         EnvelopeDTO newEnvelope = envelopeService.createNewEnvelope(token, envelopeDTO);
-        return ResponseEntity.created(URI.create("/api/envelopes/" + newEnvelope.getEnvelopeID())).body(newEnvelope);
+        return ResponseEntity.created(URI.create("/api/envelopes/" + newEnvelope.getID())).body(newEnvelope);
     }
 
     @Override

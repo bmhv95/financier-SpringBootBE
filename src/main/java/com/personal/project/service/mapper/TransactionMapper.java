@@ -1,7 +1,5 @@
 package com.personal.project.service.mapper;
 
-import com.personal.project.entity.EnvelopeTransaction;
-import com.personal.project.entity.GoalTransaction;
 import com.personal.project.entity.Transaction;
 import com.personal.project.service.DTO.EnvelopeTransactionDTO;
 import com.personal.project.service.DTO.GoalTransactionDTO;
@@ -15,19 +13,19 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface TransactionMapper {
-    @Mapping(source = "goal.goalID", target = "goalID")
-    @Mapping(source = "wallet.walletID", target = "walletID")
+    @Mapping(source = "goal.ID", target = "goalID")
+    @Mapping(source = "wallet.ID", target = "walletID")
     @Mapping(target = "type", expression = "java(getType(goalTransaction))")
     GoalTransactionDTO toGoalDTO(GoalTransaction goalTransaction);
 
     List<GoalTransactionDTO> toGoalDTOs(List<GoalTransaction> goalTransactions);
 
-    @Mapping(target = "transactionID", ignore = true)
+    @Mapping(target = "ID", ignore = true)
     @Mapping(target = "wallet", ignore = true)
     void updateTransaction(TransactionDTO transactionDTO, @MappingTarget Transaction transaction);
 
-    @Mapping(source = "envelope.envelopeID", target = "envelopeID")
-    @Mapping(source = "wallet.walletID", target = "walletID")
+    @Mapping(source = "envelope.ID", target = "envelopeID")
+    @Mapping(source = "wallet.ID", target = "walletID")
     @Mapping(target = "type", expression = "java(getType(envelopeTransaction))")
     EnvelopeTransactionDTO toEnvelopeDTO(EnvelopeTransaction envelopeTransaction);
 

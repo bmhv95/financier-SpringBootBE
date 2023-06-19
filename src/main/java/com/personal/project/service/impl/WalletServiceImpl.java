@@ -28,8 +28,8 @@ public class WalletServiceImpl implements WalletService {
         Account account = accountService.getAccountEntityFromToken(token);
 
         Wallet wallet = Wallet.builder()
-                .walletName(walletDTO.getWalletName())
-                .walletBalance(walletDTO.getWalletBalance() == null ? BigDecimal.ZERO : walletDTO.getWalletBalance())
+                .name(walletDTO.getName())
+                .balance(walletDTO.getBalance() == null ? BigDecimal.ZERO : walletDTO.getBalance())
                 .account(account)
                 .build();
 
@@ -39,7 +39,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     public List<WalletDTO> getAllWalletsByToken(String token) {
         return walletMapper.walletListToWalletDTOList(
-                walletRepository.getWalletsByAccountID(accountService.getAccountEntityFromToken(token).getAccountID())
+                walletRepository.getWalletsByAccountID(accountService.getAccountEntityFromToken(token).getID())
         );
     }
 
@@ -81,7 +81,7 @@ public class WalletServiceImpl implements WalletService {
 
     private void checkOwnership(String token, Wallet wallet) {
         Account account = accountService.getAccountEntityFromToken(token);
-        if (!wallet.getAccount().getAccountID().equals(account.getAccountID())) {
+        if (!wallet.getAccount().getID().equals(account.getID())) {
             throw ExceptionController.forbidden();
         }
     }

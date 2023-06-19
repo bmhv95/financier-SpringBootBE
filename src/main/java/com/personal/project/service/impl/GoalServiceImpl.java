@@ -30,18 +30,18 @@ public class GoalServiceImpl implements GoalService{
     public GoalDTO createNewGoal(String token, GoalDTO goalDTO) {
         Account account = accountService.getAccountEntityFromToken(token);
 
-        if((goalDTO.getGoalEndDate() != null && goalDTO.getGoalEndDate().isBefore(LocalDate.now()))
-                || (goalDTO.getGoalStartDate() != null &&  goalDTO.getGoalEndDate() != null && goalDTO.getGoalStartDate().isBefore(goalDTO.getGoalEndDate()))) {
+        if((goalDTO.getEndDate() != null && goalDTO.getEndDate().isBefore(LocalDate.now()))
+                || (goalDTO.getStartDate() != null &&  goalDTO.getEndDate() != null && goalDTO.getStartDate().isBefore(goalDTO.getEndDate()))) {
             log.error("Date input error");
             throw ExceptionController.badRequest("Date input error", "GOAL_DATE_ERROR");
         }
 
         Goal goal = Goal.builder()
-                .goalName(goalDTO.getGoalName())
-                .goalAmount(goalDTO.getGoalAmount())
-                .goalCurrentBalance(goalDTO.getGoalCurrentBalance() == null ? BigDecimal.ZERO : goalDTO.getGoalCurrentBalance())
-                .goalStartDate(goalDTO.getGoalStartDate() == null ? LocalDate.now() : goalDTO.getGoalStartDate())
-                .goalEndDate(goalDTO.getGoalEndDate())
+                .name(goalDTO.getName())
+                .amount(goalDTO.getAmount())
+                .currentBalance(goalDTO.getCurrentBalance() == null ? BigDecimal.ZERO : goalDTO.getCurrentBalance())
+                .startDate(goalDTO.getStartDate() == null ? LocalDate.now() : goalDTO.getStartDate())
+                .endDate(goalDTO.getEndDate())
                 .account(account)
                 .build();
 
@@ -51,7 +51,7 @@ public class GoalServiceImpl implements GoalService{
     @Override
     public List<GoalDTO> getAllGoalsByToken(String token) {
         return goalMapper.goalListToGoalDTOList(
-                goalRepository.getGoalsByAccountID(accountService.getAccountEntityFromToken(token).getAccountID())
+                goalRepository.getGoalsByAccountID(accountService.getAccountEntityFromToken(token).getID())
         );
     }
 
@@ -85,7 +85,7 @@ public class GoalServiceImpl implements GoalService{
     @Override
     public List<GoalDTO> getGoalsUnmet(String token) {
         return getAllGoalsByToken(token).stream()
-                .filter(goal -> goal.getGoalCurrentBalance().compareTo(goal.getGoalAmount()) < 0)
+                .filter(goal -> goal.getCurrentBalance().compareTo(goal.getAmount()) < 0)
                 .toList();
     }
 
@@ -94,16 +94,16 @@ public class GoalServiceImpl implements GoalService{
         List<String> result = new ArrayList<>();
         List<GoalDTO> unmetGoals = getGoalsUnmet(token);
         for(GoalDTO goal : unmetGoals){
-            long timeRemaining = LocalDate.now().until(goal.getGoalEndDate(), ChronoUnit.MONTHS);
-            BigDecimal monthlyAllocations = goal.getGoalAmount().subtract(goal.getGoalCurrentBalance()).divide(BigDecimal.valueOf(timeRemaining), RoundingMode.DOWN);
-            result.add("Goal: " + goal.getGoalID() + " - " + goal.getGoalName() + " - Monthly allocations: " + monthlyAllocations);
+            long timeRemaining = LocalDate.now().until(goal.getEndDate(), ChronoUnit.MONTHS);
+            BigDecimal monthlyAllocations = goal.getAmount().subtract(goal.getCurrentBalance()).divide(BigDecimal.valueOf(timeRemaining), RoundingMode.DOWN);
+            result.add("Goal: " + goal.getID() + " - " + goal.getName() + " - Monthly allocations: " + monthlyAllocations);
         }
         return result;
     }
 
     private void checkOwnership(String token, Goal goal) {
         Account account = accountService.getAccountEntityFromToken(token);
-        if(!goal.getAccount().getAccountID().equals(account.getAccountID())) {
+        if(!goal.getAccount().getID().equals(account.getID())) {
             throw ExceptionController.forbidden();
         }
     }

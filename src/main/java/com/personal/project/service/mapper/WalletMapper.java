@@ -16,6 +16,6 @@ public interface WalletMapper {
 
     List<WalletDTO> walletListToWalletDTOList(List<Wallet> wallets);
 
-    @Mapping(target = "walletID", ignore = true)
+    @Mapping(target = "ID", ignore = true)
     void updateWallet(WalletDTO walletDTO, @MappingTarget Wallet wallet);
 }

@@ -7,8 +7,5 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@Repository
-public interface GoalRepository extends JpaRepository<Goal, Long> {
-    @Query("SELECT g FROM Goal g WHERE g.account.accountID = ?1")
-    List<Goal> getGoalsByAccountID(Long accountID);
+public interface GoalRepository extends EnvelopeRepository<Goal> {
 }

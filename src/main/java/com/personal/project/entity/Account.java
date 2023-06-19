@@ -22,14 +22,15 @@ import java.util.List;
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "acc_id")
-    private Long accountID;
+    private Long ID;
 
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
     private String accountName;
+    private String firstName;
+    private String lastName;
     private String phoneNumber;
 
     @Column(unique = true, nullable = false)

@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,9 +19,10 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@DiscriminatorValue("GOAL")
-public class Goal extends Envelope{
-    private LocalDate startDate;
-
-    private LocalDate endDate;
+@DiscriminatorValue("SPENDING")
+public class Spending extends Envelope {
+    private LocalDate date;
+    @Enumerated(EnumType.STRING)
+    private Period periodType;
+    private Long periodCount;
 }

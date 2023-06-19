@@ -11,9 +11,12 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class AccountDTO {
     @JsonIgnore
-    private Long accountID;
+    private Long ID;
     @NotNull
     private String accountName;
+
+    private String firstName;
+    private String lastName;
     @JsonIgnore
     @NotNull
     private String password;

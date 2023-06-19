@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface WalletRepository extends JpaRepository<Wallet, Long> {
-    @Query("SELECT w FROM Wallet w WHERE w.account.accountID = ?1")
+    @Query("SELECT w FROM Wallet w WHERE w.account.ID = ?1")
     List<Wallet> getWalletsByAccountID(Long accountID);
 }

@@ -22,7 +22,7 @@ public class WalletResource implements WalletAPI {
     @Override
     public ResponseEntity<WalletDTO> createNewWallet(String token, WalletDTO walletDTO) {
         WalletDTO newWallet = walletService.createNewWallet(token, walletDTO);
-        return ResponseEntity.created(URI.create("/api/wallets/" + newWallet.getWalletID())).body(newWallet);
+        return ResponseEntity.created(URI.create("/api/wallets/" + newWallet.getID())).body(newWallet);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class WalletResource implements WalletAPI {
     @Override
     public ResponseEntity<IncomeDTO> createNewIncome(String token, Long walletID, IncomeDTO incomeDTO) {
         IncomeDTO newIncome = incomeService.createNewIncome(token, walletID, incomeDTO);
-        return ResponseEntity.created(URI.create("/api/wallets/incomes/" + newIncome.getIncomeID())).body(newIncome);
+        return ResponseEntity.created(URI.create("/api/wallets/incomes/" + newIncome.getID())).body(newIncome);
     }
 
     @Override

@@ -16,21 +16,21 @@ public class TransactionListener {
         updateTransactionWallet(transaction);
     }
     private void updateWalletMoney(Transaction transaction) {
-        if(transaction.getTransactionAmount() != null) {
-            BigDecimal walletBalance = transaction.getWallet().getWalletBalance();
-            BigDecimal newBalance = walletBalance.add(transaction.getTransactionAmount());
-            transaction.getWallet().setWalletBalance(newBalance);
+        if(transaction.getAmount() != null) {
+            BigDecimal walletBalance = transaction.getWallet().getBalance();
+            BigDecimal newBalance = walletBalance.subtract(transaction.getAmount());
+            transaction.getWallet().setBalance(newBalance);
         }
     }
 
     private void updateTransactionWallet(Transaction transaction) {
         if(previousTransaction != null && !previousTransaction.getWallet().equals(transaction.getWallet())) {
-            BigDecimal previousWalletBalance = previousTransaction.getWallet().getWalletBalance();
-            BigDecimal newBalance = previousWalletBalance.subtract(transaction.getTransactionAmount());
-            previousTransaction.getWallet().setWalletBalance(newBalance);
+            BigDecimal previousWalletBalance = previousTransaction.getWallet().getBalance();
+            BigDecimal newBalance = previousWalletBalance.add(transaction.getAmount());
+            previousTransaction.getWallet().setBalance(newBalance);
 
-            transaction.getWallet().setWalletBalance(
-                    transaction.getWallet().getWalletBalance().add(transaction.getTransactionAmount())
+            transaction.getWallet().setBalance(
+                    transaction.getWallet().getBalance().subtract(transaction.getAmount())
             );
         }
     }

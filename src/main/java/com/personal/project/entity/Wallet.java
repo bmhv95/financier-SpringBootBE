@@ -19,13 +19,14 @@ import java.time.LocalDate;
 public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "wallet_id")
-    private Long walletID;
+    private Long ID;
 
-    private String walletName;
+    private String name;
 
     @Column(nullable = false)
-    private BigDecimal walletBalance;
+    private BigDecimal balance;
+
+    private BigDecimal allocated;
 
     @CreationTimestamp
     private LocalDate createdDate;
@@ -36,4 +37,6 @@ public class Wallet {
     @ManyToOne
     @JoinColumn(name = "acc_id")
     private Account account;
+
+    private boolean isActive;
 }

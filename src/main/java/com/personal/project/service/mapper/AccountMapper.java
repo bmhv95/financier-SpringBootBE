@@ -13,7 +13,7 @@ public interface AccountMapper {
 
     List<AccountDTO> accountsToAccountDTOs(List<Account> accounts);
 
-    @Mapping(target = "accountID", ignore = true)
+    @Mapping(target = "ID", ignore = true)
     @Mapping(target = "password", ignore = true)
     void updateAccount(FullAccountDTO accountDTO, @MappingTarget Account account);
 }

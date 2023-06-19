@@ -56,6 +56,16 @@ public class ExceptionController {
         return new ResponseException(TRANSACTION_NOT_FOUND_MESSAGE, TRANSACTION_NOT_FOUND_MESSAGE_KEY, HttpStatus.NOT_FOUND);
     }
 
+    public static ResponseException allocationNotFound(Long allocationID){
+        log.warn(ALLOCATION_NOT_FOUND_MESSAGE + " : " + allocationID);
+        return new ResponseException(ALLOCATION_NOT_FOUND_MESSAGE, ALLOCATION_NOT_FOUND_MESSAGE_KEY, HttpStatus.NOT_FOUND);
+    }
+
+    public static ResponseException incomeNotFound(Long incomeID){
+        log.warn(INCOME_NOT_FOUND_MESSAGE + " : " + incomeID);
+        return new ResponseException(INCOME_NOT_FOUND_MESSAGE, INCOME_NOT_FOUND_MESSAGE_KEY, HttpStatus.NOT_FOUND);
+    }
+
     public static ResponseException accountExisted(String email){
         log.warn(ACCOUNT_EXISTED_MESSAGE + " : " + email);
         return new ResponseException(ACCOUNT_EXISTED_MESSAGE, ACCOUNT_EXISTED_MESSAGE_KEY, HttpStatus.CONFLICT);
