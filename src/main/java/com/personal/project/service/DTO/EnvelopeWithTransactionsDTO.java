@@ -11,5 +11,5 @@ import java.util.List;
 @AllArgsConstructor
 public class EnvelopeWithTransactionsDTO {
     private EnvelopeDTO envelope;
-    private List<EnvelopeTransactionDTO> transactions;
+    private List<TransactionDTO> transactions;
 }

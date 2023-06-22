@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Data
@@ -27,7 +28,7 @@ public abstract class Envelope {
     private String description;
 
     @Column(nullable = false)
-    private BigDecimal limit;
+    private BigDecimal budget;
 
     @Column(nullable = false)
     private BigDecimal spent;
@@ -44,6 +45,9 @@ public abstract class Envelope {
     @ManyToOne
     @JoinColumn(name = "acc_id")
     private Account account;
+
+    @OneToMany(mappedBy = "envelope")
+    private List<Transaction> transactions;
 
     private boolean isActive;
 }

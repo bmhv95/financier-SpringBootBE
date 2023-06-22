@@ -5,9 +5,11 @@ import com.personal.project.service.DTO.AllocationDTO;
 import java.util.List;
 
 public interface AllocationService {
-    AllocationDTO createNewAllocation(String token, AllocationDTO allocationDTO);
+    AllocationDTO createNewAllocation(String token, Long walletID, AllocationDTO allocationDTO);
 
     List<AllocationDTO> getAllAllocationsByToken(String token);
+
+    List<AllocationDTO> getAllocationsByWalletID(String token, Long walletID);
 
     AllocationDTO getAllocationByID(String token, Long allocationID);
 

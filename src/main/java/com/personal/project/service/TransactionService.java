@@ -1,36 +1,24 @@
 package com.personal.project.service;
 
-import com.personal.project.service.DTO.EnvelopeTransactionDTO;
-import com.personal.project.service.DTO.GoalTransactionDTO;
 import com.personal.project.service.DTO.TransactionDTO;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public interface TransactionService<T extends TransactionDTO> {
-    T createTransaction(String token, T transactionDTO);
+public interface TransactionService {
+    TransactionDTO createTransaction(String token, TransactionDTO transactionDTO);
 
-    List<T> getAllTransactions(String token);
+    List<TransactionDTO> getAllTransactions(String token);
 
-    T getTransactionByID(String token, Long transactionID);
+    TransactionDTO getTransactionByID(String token, Long transactionID);
 
-    List<EnvelopeTransactionDTO> getAllEnvelopeTransactions(String token);
+    List<TransactionDTO> getAllTransactionsByWalletID(String token, Long walletID);
 
-    List<GoalTransactionDTO> getAllGoalTransactions(String token);
+    List<TransactionDTO> getAllTransactionsByEnvelopeID(String token, Long envelopeID);
 
-    List<T> getAllTransactionsByWalletID(String token, Long walletID);
-
-    List<T> getGoalTransactionsByWalletID(String token, Long walletID);
-
-    List<T> getEnvelopeTransactionsByWalletID(String token, Long walletID);
-
-    T updateTransactionByID(String token, Long transactionID, T transactionDTO);
+    TransactionDTO updateTransactionByID(String token, Long transactionID, TransactionDTO transactionDTO);
 
     void deleteTransactionByID(String token, Long transactionID);
 
-    List<T> getTransactionsBetweenMonths(String token, LocalDate startDate, LocalDate endDate);
-
-    List<T> getEnvelopeTransactionsBetweenMonths(String token, LocalDate startDate, LocalDate endDate);
-
-    List<T> getGoalTransactionsBetweenMonths(String token, LocalDate startDate, LocalDate endDate);
+    List<TransactionDTO> getTransactionsBetweenMonths(String token, LocalDate startDate, LocalDate endDate);
 }

@@ -36,4 +36,7 @@ public class Allocation {
     @ManyToOne
     @JoinColumn(name = "envelope_id")
     private Envelope envelope;
+
+    private Period periodType;
+    private Long periodCount;
 }

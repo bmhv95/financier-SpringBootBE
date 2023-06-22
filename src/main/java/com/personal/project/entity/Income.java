@@ -31,7 +31,6 @@ public class Income {
     private BigDecimal amount;
     @CreationTimestamp
     private LocalDate date;
-    private boolean recurring;
 
     @Enumerated(EnumType.STRING)
     private Period periodType;

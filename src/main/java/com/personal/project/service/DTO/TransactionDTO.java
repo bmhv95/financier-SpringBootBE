@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class TransactionDTO {
+public class TransactionDTO {
     private Long ID;
 
     @NotNull
@@ -20,8 +20,10 @@ public abstract class TransactionDTO {
     private String comment;
 
     private LocalDate date;
+
     @NotNull
     private Long walletID;
 
-    private String type;
+    @NotNull
+    private Long envelopeID;
 }

@@ -10,6 +10,8 @@ public interface WalletService {
 
     List<WalletDTO> getAllWalletsByToken(String token);
 
+    List<WalletDTO> getActiveWallets(String token);
+
     WalletDTO getWalletByID(String token, Long walletID);
 
     Wallet getWalletEntityByID(String token, Long walletID);

@@ -11,7 +11,6 @@ import java.util.List;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface AllocationMapper {
-    @Mapping(target = "ID", ignore = true)
     @Mapping(target = "walletID", source = "wallet.ID")
     @Mapping(target = "envelopeID", source = "envelope.ID")
     AllocationDTO toAllocationDTO(Allocation allocation);

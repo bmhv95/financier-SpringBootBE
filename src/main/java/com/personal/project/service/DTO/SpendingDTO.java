@@ -1,28 +1,20 @@
 package com.personal.project.service.DTO;
 
 import com.personal.project.entity.Period;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @NoArgsConstructor
-public class AllocationDTO {
-    private Long ID;
-
-    private String name;
-    @NotNull
-    private BigDecimal amount;
-
+public class SpendingDTO extends EnvelopeDTO{
     private LocalDate date;
-
-    private Long walletID;
-    @NotNull
-    private Long envelopeID;
 
     private Period periodType;
     private Long periodCount;
+
+    private String type = "SPENDING";
 }

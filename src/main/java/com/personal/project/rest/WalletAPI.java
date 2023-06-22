@@ -1,5 +1,6 @@
 package com.personal.project.rest;
 
+import com.personal.project.service.DTO.AllocationDTO;
 import com.personal.project.service.DTO.IncomeDTO;
 import com.personal.project.service.DTO.WalletDTO;
 import jakarta.validation.Valid;
@@ -15,8 +16,11 @@ public interface WalletAPI {
     @PostMapping("/new")
     ResponseEntity<WalletDTO> createNewWallet(@RequestHeader("Authorization") String token, @Valid @RequestBody WalletDTO walletDTO);
 
-    @GetMapping
+    @GetMapping("/all")
     ResponseEntity<List<WalletDTO>> getAllWalletsByToken(@RequestHeader("Authorization") String token);
+
+    @GetMapping
+    ResponseEntity<List<WalletDTO>> getActiveWalletsByToken(@RequestHeader("Authorization") String token);
 
     @GetMapping("/{walletID}")
     ResponseEntity<WalletDTO> getWalletByID(@RequestHeader("Authorization") String token, @PathVariable Long walletID);
@@ -30,7 +34,7 @@ public interface WalletAPI {
     @GetMapping("/{walletID}/incomes")
     ResponseEntity<List<IncomeDTO>> getIncomesByWalletID(@RequestHeader("Authorization") String token, @PathVariable Long walletID);
 
-    @GetMapping("/incomes)")
+    @GetMapping("/incomes")
     ResponseEntity<List<IncomeDTO>> getAllIncomes(@RequestHeader("Authorization") String token);
 
     @PostMapping("/{walletID}/incomes/new")
@@ -41,4 +45,19 @@ public interface WalletAPI {
 
     @DeleteMapping("/incomes/{incomeID}")
     ResponseEntity<Void> deleteIncomeByID(@RequestHeader("Authorization") String token, @PathVariable Long incomeID);
+
+    @PostMapping("/{walletID}/allocations/new")
+    ResponseEntity<AllocationDTO> createNewAllocation(@RequestHeader("Authorization") String token, @PathVariable Long walletID, @Valid @RequestBody AllocationDTO allocationDTO);
+
+    @GetMapping("/{walletID}/allocations")
+    ResponseEntity<List<AllocationDTO>> getAllocationsByWalletID(@RequestHeader("Authorization") String token, @PathVariable Long walletID);
+
+    @GetMapping("/allocations")
+    ResponseEntity<List<AllocationDTO>> getAllAllocations(@RequestHeader("Authorization") String token);
+
+    @PutMapping("/allocations/{allocationID}")
+    ResponseEntity<AllocationDTO> updateAllocationByID(@RequestHeader("Authorization") String token, @PathVariable Long allocationID, @RequestBody AllocationDTO allocationDTO);
+
+    @DeleteMapping("/allocations/{allocationID}")
+    ResponseEntity<Void> deleteAllocationByID(@RequestHeader("Authorization") String token, @PathVariable Long allocationID);
 }

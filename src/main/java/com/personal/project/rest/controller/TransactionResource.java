@@ -1,8 +1,6 @@
 package com.personal.project.rest.controller;
 
 import com.personal.project.rest.TransactionAPI;
-import com.personal.project.service.DTO.EnvelopeTransactionDTO;
-import com.personal.project.service.DTO.GoalTransactionDTO;
 import com.personal.project.service.DTO.TransactionDTO;
 import com.personal.project.service.TransactionService;
 import lombok.RequiredArgsConstructor;
@@ -19,43 +17,20 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class TransactionResource implements TransactionAPI{
-    private final TransactionService<TransactionDTO> transactionService;
-
+    private final TransactionService transactionService;
     @Override
-    public ResponseEntity<EnvelopeTransactionDTO> createEnvelopeTransaction(String token, EnvelopeTransactionDTO envelopeTransactionDTO) {
-        EnvelopeTransactionDTO newEnvelopeTransaction = (EnvelopeTransactionDTO) transactionService.createTransaction(token, envelopeTransactionDTO);
-        return ResponseEntity.created(URI.create("/api/transactions/envelopes/" + newEnvelopeTransaction.getID())).body(newEnvelopeTransaction);
+    public ResponseEntity<TransactionDTO> createNewTransaction(String token, TransactionDTO transactionDTO) {
+        TransactionDTO newTransaction = transactionService.createTransaction(token, transactionDTO);
+        return ResponseEntity.created(URI.create("/api/transactions/" + newTransaction.getID())).body(newTransaction);
     }
-
-    @Override
-    public ResponseEntity<GoalTransactionDTO> createGoalTransaction(String token, GoalTransactionDTO goalTransactionDTO) {
-        GoalTransactionDTO newGoalTransaction = (GoalTransactionDTO) transactionService.createTransaction(token, goalTransactionDTO);
-        return ResponseEntity.created(URI.create("/api/transactions/goals/" + newGoalTransaction.getID())).body(newGoalTransaction);
-    }
-
     @Override
     public ResponseEntity<List<TransactionDTO>> getAllTransactions(String token) {
         return ResponseEntity.ok(transactionService.getAllTransactions(token));
     }
 
     @Override
-    public ResponseEntity<List<EnvelopeTransactionDTO>> getAllEnvelopeTransactions(String token) {
-        return ResponseEntity.ok(transactionService.getAllEnvelopeTransactions(token));
-    }
-
-    @Override
-    public ResponseEntity<EnvelopeTransactionDTO> getEnvelopeTransactionByEnvelopeId(String token, Long envelopeID) {
-        return ResponseEntity.ok((EnvelopeTransactionDTO) transactionService.getTransactionByID(token, envelopeID));
-    }
-
-    @Override
-    public ResponseEntity<List<GoalTransactionDTO>> getAllGoalTransactions(String token) {
-        return ResponseEntity.ok(transactionService.getAllGoalTransactions(token));
-    }
-
-    @Override
-    public ResponseEntity<GoalTransactionDTO> getGoalTransactionByGoalId(String token, Long goalID) {
-        return ResponseEntity.ok((GoalTransactionDTO) transactionService.getTransactionByID(token, goalID));
+    public ResponseEntity<List<TransactionDTO>> getAllTransactionsByEnvelopeID(String token, Long envelopeID) {
+        return null;
     }
 
     @Override
@@ -69,17 +44,6 @@ public class TransactionResource implements TransactionAPI{
     }
 
     @Override
-    public ResponseEntity<EnvelopeTransactionDTO> updateEnvelopeTransactionById(String token, Long id, EnvelopeTransactionDTO envelopeTransactionDTO) {
-        return ResponseEntity.ok((EnvelopeTransactionDTO) transactionService.updateTransactionByID(token, id, envelopeTransactionDTO));
-    }
-
-    @Override
-    public ResponseEntity<GoalTransactionDTO> updateGoalTransactionById(String token, Long id, GoalTransactionDTO goalTransactionDTO) {
-        return ResponseEntity.ok((GoalTransactionDTO) transactionService.updateTransactionByID(token, id, goalTransactionDTO));
-    }
-
-
-    @Override
     public ResponseEntity<Void> deleteTransactionById(String token, Long id) {
         transactionService.deleteTransactionByID(token, id);
         return ResponseEntity.noContent().build();
@@ -88,16 +52,6 @@ public class TransactionResource implements TransactionAPI{
     @Override
     public ResponseEntity<List<TransactionDTO>> getTransactionsBetweenTime(String token, String startMonth, String endMonth) {
         return ResponseEntity.ok(transactionService.getTransactionsBetweenMonths(token, parseStartMonth(startMonth), parseEndMonth(endMonth)));
-    }
-
-    @Override
-    public ResponseEntity<List<TransactionDTO>> getEnvelopeTransactionsBetweenTime(String token, String startMonth, String endMonth) {
-        return ResponseEntity.ok(transactionService.getEnvelopeTransactionsBetweenMonths(token, parseStartMonth(startMonth), parseEndMonth(endMonth)));
-    }
-
-    @Override
-    public ResponseEntity<List<TransactionDTO>> getGoalTransactionsBetweenTime(String token, String startMonth, String endMonth) {
-        return ResponseEntity.ok(transactionService.getGoalTransactionsBetweenMonths(token, parseStartMonth(startMonth), parseEndMonth(endMonth)));
     }
 
     private LocalDate parseStartMonth(String month) {

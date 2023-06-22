@@ -31,6 +31,7 @@ public class WalletServiceImpl implements WalletService {
                 .name(walletDTO.getName())
                 .balance(walletDTO.getBalance() == null ? BigDecimal.ZERO : walletDTO.getBalance())
                 .account(account)
+                .isActive(true)
                 .build();
 
         return walletMapper.walletToWalletDTO(walletRepository.save(wallet));
@@ -41,6 +42,12 @@ public class WalletServiceImpl implements WalletService {
         return walletMapper.walletListToWalletDTOList(
                 walletRepository.getWalletsByAccountID(accountService.getAccountEntityFromToken(token).getID())
         );
+    }
+
+    @Override
+    public List<WalletDTO> getActiveWallets(String token){
+        List<WalletDTO> allWallets = getAllWalletsByToken(token);
+        return allWallets.stream().filter(WalletDTO::isActive).toList();
     }
 
     @Override

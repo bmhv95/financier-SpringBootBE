@@ -22,6 +22,7 @@ import java.util.List;
 @DiscriminatorValue("SPENDING")
 public class Spending extends Envelope {
     private LocalDate date;
+
     @Enumerated(EnumType.STRING)
     private Period periodType;
     private Long periodCount;

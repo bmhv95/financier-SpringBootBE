@@ -20,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @DiscriminatorValue("GOAL")
 public class Goal extends Envelope{
+    @CreationTimestamp
     private LocalDate startDate;
 
     private LocalDate endDate;

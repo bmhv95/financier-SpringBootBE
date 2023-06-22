@@ -26,8 +26,6 @@ public class Wallet {
     @Column(nullable = false)
     private BigDecimal balance;
 
-    private BigDecimal allocated;
-
     @CreationTimestamp
     private LocalDate createdDate;
 

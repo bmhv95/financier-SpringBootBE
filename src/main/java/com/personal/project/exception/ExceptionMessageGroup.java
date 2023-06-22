@@ -5,6 +5,8 @@ public class ExceptionMessageGroup {
     static final String ACCOUNT_NOT_FOUND_MESSAGE_KEY = "ACCOUNT_NOT_FOUND";
     static final String WALLET_NOT_FOUND_MESSAGE = "Wallet Not Found";
     static final String WALLET_NOT_FOUND_MESSAGE_KEY = "WALLET_NOT_FOUND";
+    static final String WALLET_INACTIVE_MESSAGE = "Wallet inactive";
+    static final String WALLET_INACTIVE_MESSAGE_KEY = "WALLET_INACTIVE";
     static final String ENVELOPE_NOT_FOUND_MESSAGE = "Envelope Not Found";
     static final String ENVELOPE_NOT_FOUND_MESSAGE_KEY = "ENVELOPE_NOT_FOUND";
     static final String GOAL_NOT_FOUND_MESSAGE = "Goal Not Found";

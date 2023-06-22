@@ -1,6 +1,8 @@
 package com.personal.project.rest.controller;
 
 import com.personal.project.rest.WalletAPI;
+import com.personal.project.service.AllocationService;
+import com.personal.project.service.DTO.AllocationDTO;
 import com.personal.project.service.DTO.IncomeDTO;
 import com.personal.project.service.DTO.WalletDTO;
 import com.personal.project.service.IncomeService;
@@ -19,6 +21,7 @@ import java.util.List;
 public class WalletResource implements WalletAPI {
     private final WalletService walletService;
     private final IncomeService incomeService;
+    private final AllocationService allocationService;
     @Override
     public ResponseEntity<WalletDTO> createNewWallet(String token, WalletDTO walletDTO) {
         WalletDTO newWallet = walletService.createNewWallet(token, walletDTO);
@@ -28,6 +31,11 @@ public class WalletResource implements WalletAPI {
     @Override
     public ResponseEntity<List<WalletDTO>> getAllWalletsByToken(String token) {
         return ResponseEntity.ok(walletService.getAllWalletsByToken(token));
+    }
+
+    @Override
+    public ResponseEntity<List<WalletDTO>> getActiveWalletsByToken(String token) {
+        return ResponseEntity.ok(walletService.getActiveWallets(token));
     }
 
     @Override
@@ -70,6 +78,33 @@ public class WalletResource implements WalletAPI {
     @Override
     public ResponseEntity<Void> deleteIncomeByID(String token, Long incomeID) {
         incomeService.deleteIncomeByID(token, incomeID);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Override
+    public ResponseEntity<AllocationDTO> createNewAllocation(String token, Long walletID, AllocationDTO allocationDTO) {
+        AllocationDTO newAllocation = allocationService.createNewAllocation(token, walletID, allocationDTO);
+        return ResponseEntity.created(URI.create("/api/wallets/allocation/" + newAllocation.getID())).body(newAllocation);
+    }
+
+    @Override
+    public ResponseEntity<List<AllocationDTO>> getAllocationsByWalletID(String token, Long walletID) {
+        return ResponseEntity.ok(allocationService.getAllocationsByWalletID(token, walletID));
+    }
+
+    @Override
+    public ResponseEntity<List<AllocationDTO>> getAllAllocations(String token) {
+        return ResponseEntity.ok(allocationService.getAllAllocationsByToken(token));
+    }
+
+    @Override
+    public ResponseEntity<AllocationDTO> updateAllocationByID(String token, Long allocationID, AllocationDTO allocationDTO) {
+        return ResponseEntity.ok(allocationService.updateAllocationByID(token, allocationID, allocationDTO));
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteAllocationByID(String token, Long allocationID) {
+        allocationService.deleteAllocationByID(token, allocationID);
         return ResponseEntity.noContent().build();
     }
 }

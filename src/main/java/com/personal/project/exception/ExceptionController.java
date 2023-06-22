@@ -27,6 +27,10 @@ public class ExceptionController {
         return new ResponseException(message, messageKey, HttpStatus.FORBIDDEN);
     }
 
+    public static ResponseException inactive(String message, String messageKey){
+        return new ResponseException(message, messageKey, HttpStatus.NOT_FOUND);
+    }
+
     public static ResponseException internalServerError(String message, String messageKey) {
         return new ResponseException(message, messageKey, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -39,6 +43,11 @@ public class ExceptionController {
     public static ResponseException walletNotFound(Long walletID){
         log.warn(WALLET_NOT_FOUND_MESSAGE + " : " + walletID);
         return new ResponseException(WALLET_NOT_FOUND_MESSAGE, WALLET_NOT_FOUND_MESSAGE_KEY, HttpStatus.NOT_FOUND);
+    }
+
+    public static ResponseException walletInactive(Long walletID){
+        log.warn(WALLET_INACTIVE_MESSAGE + " : " + walletID);
+        return new ResponseException(WALLET_INACTIVE_MESSAGE, WALLET_INACTIVE_MESSAGE_KEY, HttpStatus.NOT_FOUND);
     }
 
     public static ResponseException envelopeNotFound(Long envelopeID){

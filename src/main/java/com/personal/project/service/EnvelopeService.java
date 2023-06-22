@@ -2,29 +2,45 @@ package com.personal.project.service;
 
 import com.personal.project.service.DTO.EnvelopeDTO;
 import com.personal.project.service.DTO.EnvelopeWithTransactionsDTO;
+import com.personal.project.service.DTO.GoalDTO;
+import com.personal.project.service.DTO.SpendingDTO;
 
 import java.time.LocalDate;
 import java.util.List;
 
 public interface EnvelopeService<T extends EnvelopeDTO> {
 
-    EnvelopeDTO createNewEnvelope(String token, EnvelopeDTO envelopeDTO);
+    T createNewEnvelope(String token, T envelopeDTO);
 
-    List<EnvelopeDTO> getAllEnvelopesByToken(String token);
+    List<T> getAllEnvelopesByToken(String token);
 
-    EnvelopeDTO getEnvelopeByID(String token, Long envelopeID);
+    List<T> getActiveEnvelopesByToken(String token);
 
-    EnvelopeDTO updateEnvelopeByID(String token, Long envelopeID, EnvelopeDTO envelopeDTO);
+    List<SpendingDTO> getAllSpendings(String token);
+
+    List<SpendingDTO> getActiveSpendings(String token);
+
+    List<GoalDTO> getAllGoals(String token);
+
+    List<GoalDTO> getActiveGoals(String token);
+
+    T getEnvelopeByID(String token, Long envelopeID);
+
+    T updateEnvelopeByID(String token, Long envelopeID, T envelopeDTO);
 
     void deleteEnvelopeByID(String token, Long envelopeID);
 
-    List<EnvelopeDTO> getEnvelopesWithNegativeBalance(String token);
+    List<T> getEnvelopesWithNegativeBalance(String token);
 
-    List<EnvelopeDTO> getEnvelopesBelowPercentBalance(String token, Long percentage);
+    List<T> getEnvelopesBelowPercentBalance(String token, Long percentage);
 
     EnvelopeWithTransactionsDTO getEnvelopeWithTransactions(String token, Long envelopeID);
 
     List<EnvelopeWithTransactionsDTO> getFullEnvelopesBetweenMonths(String token, LocalDate startDate, LocalDate endDate);
 
     List<EnvelopeWithTransactionsDTO> getTopNEnvelopesBySpending(String token, int n, LocalDate startDate, LocalDate endDate);
+
+    List<GoalDTO> getGoalsUnmet(String token);
+
+    List<String> calculateUnmetGoalsAllocations(String token);
 }
